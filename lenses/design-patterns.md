@@ -4,9 +4,9 @@ Reusable design-pattern knowledge for Java/Spring code: when a pattern helps or 
 
 ## How skills use this lens
 
-Today this lens has exactly one consumer: **`java-pr-review`**, which applies it to a **diff/PR** — *does this pattern in the diff make the code simpler and safer, or is it ceremony/overengineering?* — and emits severity-tagged review comments. The review-flavored sections below (severity calibration, comment style, integration contract) are written for that PR-review intent.
+This lens has two consumers. Its primary consumer is **`java-pr-review`**, which applies it to a **diff/PR** — *does this pattern in the diff make the code simpler and safer, or is it ceremony/overengineering?* — and emits severity-tagged review comments. It is also consulted by **`architecture-review`** at **system/design altitude**, which asks the same question about a structural choice in a design rather than in a single diff. The review-flavored sections below (severity calibration, comment style, integration contract) are written primarily for the PR-review intent; `architecture-review` applies the same pattern knowledge with a design-altitude intent.
 
-The same knowledge could later serve other workflows with a *different* intent — that is why it lives in `lenses/`. But the lens is **not** generalized for them now: it stays PR-useful, and a neutral core is extracted only when a second real consumer exists. A consuming skill loads it only when the diff or design actually touches the structural areas in "When to Use" below — never just because a pattern name appears.
+That second consumer is exactly why this knowledge lives in `lenses/` rather than inside one skill. The lens is still **not** over-generalized: it stays grounded in the concrete review questions both skills can act on, and each consumer supplies its own altitude and intent. A consuming skill loads it only when the diff or design actually touches the structural areas in "When to Use" below — never just because a pattern name appears.
 
 ## Purpose
 
@@ -42,7 +42,7 @@ If none of these apply, the correct recommendation is no pattern. Recommending n
 
 ## Severity Calibration
 
-Apply these four levels to PATTERN findings (see `severity-rubric.md` for the shared definitions):
+Apply these four levels to PATTERN findings (see [`../rules/severity-rubric.md`](../rules/severity-rubric.md) for the shared definitions):
 
 - **MUST** — The pattern (or its absence) causes a concrete defect or serious hazard: a bug, a production risk, severe or cyclic coupling, inconsistent or corrupted state, a transactional/consistency error (for example, mutable instance fields on a default singleton-scoped Spring bean accessed concurrently across requests, or a factory that escapes the transaction boundary), broken polymorphic substitutability, a violated contract, or a structure that makes a required near-term evolution unsafe. These must be raised and must explain the failure mode.
 - **SHOULD** — No defect today, but a specific pattern would clearly improve maintainability, testability, or extensibility, and you can state the concrete benefit (for example, "extracting this `switch` into polymorphic types removes the three parallel branches that must currently be edited together"). Raise it when the benefit is real and nameable.
