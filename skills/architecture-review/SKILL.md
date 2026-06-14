@@ -71,9 +71,14 @@ defers line-by-line concerns to `java-pr-review`.
      idempotency under at-least-once delivery, or the dual-write/outbox problem. Use it to judge
      whether a saga is even warranted (often one local transaction suffices) and whether
      compensation, idempotency, and lost isolation are handled.
+   - [`../../lenses/cqrs.md`](../../lenses/cqrs.md) — when the change separates the write (command)
+     model from the read (query) model: a denormalized read model or projection, a separate read
+     store/replica, or distinct read views. Use it to judge whether the separation is warranted at
+     all (a same-store read-only projection often suffices), whether the read model has an owner and
+     a rebuild path, and whether eventual consistency and read-your-own-writes are handled.
    - [`../../rules/severity-rubric.md`](../../rules/severity-rubric.md) — always; classify every
      finding `MUST` / `SHOULD` / `NIT` / `NO_COMMENT`.
-   - *(More shared lenses — cqrs, cdc, event-driven, spring-production-readiness — are added
+   - *(More shared lenses — cdc, event-driven, spring-production-readiness — are added
      here as they land in `lenses/`.)*
 5. **Prioritize architecture-level concerns** the line reviewer cannot judge:
    - **Context boundaries & coupling** — does the change respect bounded-context boundaries, or does
