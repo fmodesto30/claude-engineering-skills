@@ -22,20 +22,33 @@ comments and juniors can self-review before asking.
   always inspect the *target* project's actual stack before recommending anything.
 - **Few strong comments over many weak ones.** One well-justified `MUST` beats a wall of nits.
 
+## Architecture model
+
+- **Skill** = a mode of work / workflow (`skills/<name>/SKILL.md`).
+- **Lens** = reusable specialized knowledge (`lenses/<topic>.md`), loaded by skills on demand.
+- **Template** = output format (`templates/…`).
+- **Rule** = a global rule (e.g. the severity rubric).
+- **Hook** = deterministic enforcement (added later, when needed).
+
+Knowledge lives in lenses and is shared across skills; each skill declares which lenses it uses
+and *how* it uses them — the same lens serves a different intent in PR review vs. architecture
+review vs. app bootstrap. Skills are created **per type of work**, never per book or per pattern.
+
 ## Structure
 
 ```
+lenses/
+└── design-patterns.md                   # shared knowledge: patterns that help vs. hurt (Java/Spring)
 skills/
 └── java-pr-review/
-    ├── SKILL.md                         # orchestrator: how to run a Java/Spring PR review
+    ├── SKILL.md                          # workflow: run a Java/Spring PR review
     └── references/
-        ├── severity-rubric.md           # shared MUST/SHOULD/NIT/NO_COMMENT rubric (the core)
-        └── design-patterns-lens.md      # design-patterns review lens
+        └── severity-rubric.md            # severity rubric (MUST/SHOULD/NIT/NO_COMMENT)
 ```
 
-More lenses (concurrency/transactions, testing, security, Spring production-readiness) are
-planned and will be added the same way — as `references/*.md` consulted by the main skill,
-not as separate auto-triggering skills.
+Skills (by type of work) and lenses (by subject) are added the same way as the repo grows —
+never a giant do-everything skill. If a skill ever needs to ship standalone, a packaging/export
+step copies the lenses it references into the skill so it stays self-contained.
 
 ## Using a lens
 

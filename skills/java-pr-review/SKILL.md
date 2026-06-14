@@ -35,12 +35,17 @@ knows when to stay silent.
 3. **Apply the severity rubric.** Classify every finding `MUST` / `SHOULD` / `NIT` /
    `NO_COMMENT` per [references/severity-rubric.md](references/severity-rubric.md), and obey the
    overriding rule: every finding names a concrete consequence.
-4. **Consult the relevant lenses** for the structural areas the diff touches:
-   - [references/design-patterns-lens.md](references/design-patterns-lens.md) — when the diff
+4. **Consult the lenses this skill uses**, loading only the ones whose structural area the diff
+   actually touches (never just because a pattern name appears):
+   - [`../../lenses/design-patterns.md`](../../lenses/design-patterns.md) — when the diff
      adds/removes abstractions, inheritance, type/state branching, creation logic, integration
-     boundaries, cross-cutting behavior, or eventing.
-   - *(More lenses — concurrency/transactions, testing, security, Spring production-readiness —
-     are added here as they are written.)*
+     boundaries, cross-cutting behavior, or eventing. Apply it with a **diff/PR focus** — *does
+     this pattern in the diff make the code simpler and safer, or is it ceremony/overengineering?*
+     — **not** as a broad architectural review (that is a separate skill's job).
+   - [`references/severity-rubric.md`](references/severity-rubric.md) — always; classify every
+     finding `MUST` / `SHOULD` / `NIT` / `NO_COMMENT`.
+   - *(More shared lenses — testing, SOLID, clean-code, Spring production-readiness — are
+     declared here as they are added to `lenses/`.)*
 5. **Prioritize reasoning-heavy concerns** the linter cannot catch: correctness, transaction
    boundaries, idempotency, concurrency, error handling, security, observability, and
    production risk.

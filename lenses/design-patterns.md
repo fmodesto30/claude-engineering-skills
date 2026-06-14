@@ -1,4 +1,12 @@
-# Design Patterns Review Lens
+# Design Patterns Lens
+
+Reusable design-pattern knowledge for Java/Spring code: when a pattern helps or hurts, and the modern idioms that often replace the classic forms. **The intent of using this lens comes from the consuming skill, not from the lens itself.**
+
+## How skills use this lens
+
+Today this lens has exactly one consumer: **`java-pr-review`**, which applies it to a **diff/PR** — *does this pattern in the diff make the code simpler and safer, or is it ceremony/overengineering?* — and emits severity-tagged review comments. The review-flavored sections below (severity calibration, comment style, integration contract) are written for that PR-review intent.
+
+The same knowledge could later serve other workflows with a *different* intent — that is why it lives in `lenses/`. But the lens is **not** generalized for them now: it stays PR-useful, and a neutral core is extracted only when a second real consumer exists. A consuming skill loads it only when the diff or design actually touches the structural areas in "When to Use" below — never just because a pattern name appears.
 
 ## Purpose
 
