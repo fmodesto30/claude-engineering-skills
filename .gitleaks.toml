@@ -1,0 +1,20 @@
+# gitleaks configuration for claude-engineering-skills.
+#
+# Extends the default ruleset and allowlists the sanitization gate's own
+# detector script. scripts/sanitization-check.sh necessarily contains
+# secret-shaped strings (its detection regexes and its --selftest fixtures),
+# which gitleaks would otherwise flag. Our own scanner still inspects that file
+# and suppresses those lines via inline "# sanitization-allow"; this allowlist
+# only exempts it from the redundant gitleaks pass. No real secret belongs in
+# that file. An allowlist (vs. an inline comment) is used because gitleaks
+# scans commit history, so it must suppress the finding at scan time.
+title = "claude-engineering-skills"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Sanitization gate's own detector regexes and self-test fixtures"
+paths = [
+  '''scripts/sanitization-check\.sh''',
+]
