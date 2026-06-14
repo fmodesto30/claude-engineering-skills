@@ -42,9 +42,14 @@ knows when to stay silent.
      boundaries, cross-cutting behavior, or eventing. Apply it with a **diff/PR focus** — *does
      this pattern in the diff make the code simpler and safer, or is it ceremony/overengineering?*
      — **not** as a broad architectural review (that is a separate skill's job).
+   - [`../../lenses/clean-code.md`](../../lenses/clean-code.md) — when the diff touches a long or
+     growing method/class, new names, comments, duplicated logic, tangled control flow, confused
+     responsibility, or a small in-scope refactor. Apply it with a **diff/PR focus** on the changed
+     lines, defer pure style to linters, and bias toward restraint (most readability observations
+     are `NIT` or `NO_COMMENT`).
    - [`references/severity-rubric.md`](references/severity-rubric.md) — always; classify every
      finding `MUST` / `SHOULD` / `NIT` / `NO_COMMENT`.
-   - *(More shared lenses — testing, SOLID, clean-code, Spring production-readiness — are
+   - *(More shared lenses — testing, SOLID, Spring production-readiness — are
      declared here as they are added to `lenses/`.)*
 5. **Prioritize reasoning-heavy concerns** the linter cannot catch: correctness, transaction
    boundaries, idempotency, concurrency, error handling, security, observability, and
