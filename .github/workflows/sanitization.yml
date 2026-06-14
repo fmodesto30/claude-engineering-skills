@@ -1,0 +1,43 @@
+name: Sanitization Gate
+
+# Deterministic sanitization gate. Mechanizes docs/SANITIZATION_POLICY.md
+# (forbidden file types/dirs, secret content patterns, encoding hygiene),
+# plus a redundant gitleaks pass. This is enforcement; the .gitignore is only
+# a backstop.
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - develop
+      - "feat/**"
+
+permissions:
+  contents: read
+
+jobs:
+  sanitization-check:
+    name: Sanitization check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # fetch-depth: 0 so the gitleaks step can scan the full commit range.
+          # The sanitization script itself reads the git index and needs no history.
+          fetch-depth: 0
+
+      - name: Detector self-test
+        # Fails the build if any detector stops firing — guards against the gate
+        # silently degrading into a no-op.
+        run: bash scripts/sanitization-check.sh --selftest
+
+      - name: Run sanitization check
+        run: bash scripts/sanitization-check.sh
+
+      # Redundant secret scanner. gitleaks-action is free for public repos;
+      # private repos require a GITLEAKS_LICENSE secret.
+      - name: Gitleaks secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,47 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2026 fmodesto30 and contributors to claude-engineering-skills.
+
+This work — the original, sanitized engineering-review skills, lenses, rubrics,
+and documentation in this repository — is licensed under the Creative Commons
+Attribution 4.0 International License (CC BY 4.0).
+
+You are free to:
+
+  - Share — copy and redistribute the material in any medium or format.
+  - Adapt — remix, transform, and build upon the material for any purpose,
+    even commercially.
+
+Under the following term:
+
+  - Attribution — You must give appropriate credit, provide a link to this
+    license, and indicate if changes were made. You may do so in any reasonable
+    manner, but not in any way that suggests the licensor endorses you or your
+    use.
+
+No additional restrictions — You may not apply legal terms or technological
+measures that legally restrict others from doing anything the license permits.
+
+Suggested attribution:
+
+  "Based on claude-engineering-skills by fmodesto30
+   (https://github.com/fmodesto30/claude-engineering-skills), licensed under
+   CC BY 4.0."
+
+----------------------------------------------------------------------------
+
+This file is a human-readable notice. The legally binding terms are the full
+Creative Commons Attribution 4.0 International license text, which governs:
+
+  Full legal code:  https://creativecommons.org/licenses/by/4.0/legalcode
+  Human-readable summary (the "deed"):  https://creativecommons.org/licenses/by/4.0/
+
+SPDX-License-Identifier: CC-BY-4.0
+
+----------------------------------------------------------------------------
+
+Note on scope: this repository commits ONLY original, domain-neutral content,
+as required by docs/SANITIZATION_POLICY.md. It reproduces no third-party book
+text, examples, didactic structure, or identifiers. This license covers the
+original content of this repository and does not grant rights over any
+third-party material that may have informed it as background knowledge.

@@ -57,7 +57,19 @@ Before any commit:
 - [ ] All examples synthetic and neutral (or approved).
 - [ ] Encoding is clean (UTF-8, no mojibake).
 
-Run a deterministic scan (forbidden file types, secret patterns, source-specific identifiers,
-encoding), then present a **checkpoint** — file tree, `git diff --stat`, changed files,
-sanitization checklist, proposed commit message — and **wait for explicit approval** before
-committing. Work on a feature branch; never commit straight to `main`.
+Run the deterministic scan — [`scripts/sanitization-check.sh`](../scripts/sanitization-check.sh)
+(forbidden file types/dirs, secret content patterns, and encoding/mojibake) — then present a
+**checkpoint** — file tree, `git diff --stat`, changed files, sanitization checklist, proposed
+commit message — and **wait for explicit approval** before committing. Work on a feature branch;
+never commit straight to `main`.
+
+The scan is enforced two ways, so it is the control and not merely a checklist:
+
+- **Locally**, as a pre-commit hook. Create an executable `.git/hooks/pre-commit` containing
+  `exec bash scripts/sanitization-check.sh --staged` (on Windows, run via git-bash). It scans only
+  staged files and blocks the commit on any violation.
+- **In CI**, via [`.github/workflows/sanitization.yml`](../.github/workflows/sanitization.yml),
+  which runs the script — plus a detector self-test and a redundant gitleaks pass — on every PR
+  and on pushes to `main`/`develop`/`feat/**`.
+
+To suppress a verified false-positive secret match, append `# sanitization-allow` to the line.

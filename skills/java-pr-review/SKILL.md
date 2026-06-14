@@ -33,7 +33,7 @@ knows when to stay silent.
 2. **Get the diff.** Review the PR diff (changed files plus enough surrounding context to judge
    correctness and intent).
 3. **Apply the severity rubric.** Classify every finding `MUST` / `SHOULD` / `NIT` /
-   `NO_COMMENT` per [references/severity-rubric.md](references/severity-rubric.md), and obey the
+   `NO_COMMENT` per [../../rules/severity-rubric.md](../../rules/severity-rubric.md), and obey the
    overriding rule: every finding names a concrete consequence.
 4. **Consult the lenses this skill uses**, loading only the ones whose structural area the diff
    actually touches (never just because a pattern name appears):
@@ -52,7 +52,7 @@ knows when to stay silent.
      tested. Apply it with a **diff/PR focus** on the changed tests and the code under change: judge
      whether a test can fail for the right reason, never demand coverage numbers, and defer test
      style to linters.
-   - [`references/severity-rubric.md`](references/severity-rubric.md) — always; classify every
+   - [`../../rules/severity-rubric.md`](../../rules/severity-rubric.md) — always; classify every
      finding `MUST` / `SHOULD` / `NIT` / `NO_COMMENT`.
    - *(More shared lenses — SOLID, Spring production-readiness — are
      declared here as they are added to `lenses/`.)*
