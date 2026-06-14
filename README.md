@@ -42,6 +42,7 @@ lenses/
 ├── clean-code.md            # readability & maintainability of changed code
 ├── ddd.md                   # domain modeling: boundaries, aggregates, consistency
 ├── design-patterns.md       # patterns that help vs. hurt (Java/Spring)
+├── saga.md                  # cross-service consistency without distributed transactions
 └── testing.md               # test quality: does a test fail for the right reason?
 rules/
 └── severity-rubric.md       # global severity rubric (MUST/SHOULD/NIT/NO_COMMENT)
@@ -94,10 +95,10 @@ paraphrased or transcribed.
 
 Lenses and skills grow by real need, never speculatively. Planned next, in rough order:
 
-- **Lenses:** `solid`, `saga`, `cqrs`, `cdc` (change data capture), `event-driven`,
+- **Lenses:** `solid`, `cqrs`, `cdc` (change data capture), `event-driven`,
   `spring-production-readiness`, `observability`, `security`.
-- **Skills:** `architecture-review` consumes the architecture lenses (`ddd` today;
-  `saga` / `cqrs` / `cdc` / `event-driven` as they land).
+- **Skills:** `architecture-review` consumes the architecture lenses (`ddd`, `saga` today;
+  `cqrs` / `cdc` / `event-driven` as they land).
 
 A lens is added only when a real consumer needs it; a skill is added per type of work.
 
