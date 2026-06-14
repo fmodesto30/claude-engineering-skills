@@ -1,0 +1,7 @@
+# Normalize line endings: store text as LF in the repo, check out native.
+* text=auto
+
+# Shell scripts MUST stay LF on every platform (including Windows working
+# copies) so they run correctly under bash in CI and git-bash. A CRLF shebang
+# breaks `#!/usr/bin/env bash`.
+*.sh text eol=lf
