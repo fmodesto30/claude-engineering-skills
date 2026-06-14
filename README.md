@@ -1,7 +1,7 @@
 # claude-engineering-skills
 
 Original, sanitized software-engineering review skills for [Claude Code](https://claude.com/claude-code).
-First focus: **Java / Spring Boot review** — both pull-request (diff) review and system/design (architecture) review.
+First focus: **Java / Spring Boot** — reviewing changes (pull-request and architecture review) and authoring the specs that drive them (spec-driven construction). Both tracks share the same lenses.
 
 These are reusable *review lenses* — checklists, heuristics, and severity rubrics that let
 Claude apply the same engineering judgment to every PR, so reviewers stop retyping the same
@@ -32,8 +32,11 @@ comments and juniors can self-review before asking.
   run in CI and as a pre-commit hook).
 
 Knowledge lives in lenses and is shared across skills; each skill declares which lenses it uses
-and *how* it uses them — the same lens serves a different intent in PR review vs. architecture
-review vs. app bootstrap. Skills are created **per type of work**, never per book or per pattern.
+and *how* it uses them — the same lens serves a different intent across two tracks: **review**
+skills (`java-pr-review`, `architecture-review`) read it *evaluatively*, to judge code or a design
+that already exists, while **construction** skills (`spec-author`) read the *same* lens
+*generatively*, to decide what to build. Skills are created **per type of work**, never per book
+or per pattern.
 
 ## Structure
 
@@ -47,12 +50,17 @@ lenses/
 ├── saga.md                  # cross-service consistency without distributed transactions
 └── testing.md               # test quality: does a test fail for the right reason?
 rules/
-└── severity-rubric.md       # global severity rubric (MUST/SHOULD/NIT/NO_COMMENT)
+├── severity-rubric.md       # global review rubric (MUST/SHOULD/NIT/NO_COMMENT)
+└── spec-rubric.md           # global spec-quality rubric (BLOCKER/SHOULD/NIT/OK)
+templates/
+└── spec.md                  # prescriptive engineering-spec format
 skills/
 ├── architecture-review/
-│   └── SKILL.md             # workflow: review a Java/Spring design at system altitude
-└── java-pr-review/
-    └── SKILL.md             # workflow: review a Java/Spring PR diff
+│   └── SKILL.md             # review: a Java/Spring design at system altitude
+├── java-pr-review/
+│   └── SKILL.md             # review: a Java/Spring PR diff
+└── spec-author/
+    └── SKILL.md             # construction: write a prescriptive spec for a change
 scripts/
 └── sanitization-check.sh    # deterministic sanitization gate (CI + pre-commit hook)
 .github/workflows/
@@ -98,8 +106,10 @@ paraphrased or transcribed.
 Lenses and skills grow by real need, never speculatively. Planned next, in rough order:
 
 - **Lenses:** `solid`, `event-driven`, `spring-production-readiness`, `observability`, `security`.
-- **Skills:** `architecture-review` consumes the architecture lenses (`ddd`, `saga`, `cqrs`, `cdc`
-  today; `event-driven` as it lands).
+- **Review skills:** `architecture-review` consumes the architecture lenses (`ddd`, `saga`, `cqrs`,
+  `cdc` today; `event-driven` as it lands).
+- **Construction skills:** `spec-author` today; `feature-build` (spec → Java/Spring code) and
+  `app-bootstrap` (scaffold a service or module) as they land — all reusing the lenses generatively.
 
 A lens is added only when a real consumer needs it; a skill is added per type of work.
 
