@@ -4,7 +4,7 @@ Reusable clean-code knowledge for Java/Spring: how to judge whether the readabil
 
 ## How skills use this lens
 
-Today the only consumer is `java-pr-review`, which applies this lens with a diff/PR focus: it reasons about the lines that changed, not the whole codebase. This lens is deliberately *not* generalized for hypothetical future skills — it is written for a reviewer reading a diff. A consumer should load it only when the diff actually touches one of the areas listed in **When to Use**; if the change is pure formatting, config, or untouched-area churn, the lens has nothing to say and should stay closed.
+This lens has two consumers, used with opposite intents. **`java-pr-review`** reads it **evaluatively**, with a diff/PR focus: it reasons about the lines that changed, not the whole codebase. **`spec-author`** reads it **generatively**, to keep a planned change readable and its acceptance criteria checkable while deciding what to build. Beyond those two intents it is not over-generalized — it stays about the readability of changed (or planned) code, not system architecture. A consumer loads it only when the diff (or the spec it is shaping) actually touches one of the areas listed in **When to Use**; if the change is pure formatting, config, or untouched-area churn, the lens has nothing to say and should stay closed.
 
 ## Purpose
 
