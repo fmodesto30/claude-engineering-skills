@@ -39,6 +39,7 @@ review vs. app bootstrap. Skills are created **per type of work**, never per boo
 
 ```
 lenses/
+├── cdc.md                   # capturing & streaming committed datastore changes
 ├── clean-code.md            # readability & maintainability of changed code
 ├── cqrs.md                  # separating read (query) from write (command) models
 ├── ddd.md                   # domain modeling: boundaries, aggregates, consistency
@@ -96,10 +97,9 @@ paraphrased or transcribed.
 
 Lenses and skills grow by real need, never speculatively. Planned next, in rough order:
 
-- **Lenses:** `solid`, `cdc` (change data capture), `event-driven`,
-  `spring-production-readiness`, `observability`, `security`.
-- **Skills:** `architecture-review` consumes the architecture lenses (`ddd`, `saga`, `cqrs` today;
-  `cdc` / `event-driven` as they land).
+- **Lenses:** `solid`, `event-driven`, `spring-production-readiness`, `observability`, `security`.
+- **Skills:** `architecture-review` consumes the architecture lenses (`ddd`, `saga`, `cqrs`, `cdc`
+  today; `event-driven` as it lands).
 
 A lens is added only when a real consumer needs it; a skill is added per type of work.
 
