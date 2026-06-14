@@ -47,9 +47,14 @@ knows when to stay silent.
      responsibility, or a small in-scope refactor. Apply it with a **diff/PR focus** on the changed
      lines, defer pure style to linters, and bias toward restraint (most readability observations
      are `NIT` or `NO_COMMENT`).
+   - [`../../lenses/testing.md`](../../lenses/testing.md) — when the diff adds or changes tests, or
+     changes risk-bearing production code (payment, auth, persistence, money math) that should be
+     tested. Apply it with a **diff/PR focus** on the changed tests and the code under change: judge
+     whether a test can fail for the right reason, never demand coverage numbers, and defer test
+     style to linters.
    - [`references/severity-rubric.md`](references/severity-rubric.md) — always; classify every
      finding `MUST` / `SHOULD` / `NIT` / `NO_COMMENT`.
-   - *(More shared lenses — testing, SOLID, Spring production-readiness — are
+   - *(More shared lenses — SOLID, Spring production-readiness — are
      declared here as they are added to `lenses/`.)*
 5. **Prioritize reasoning-heavy concerns** the linter cannot catch: correctness, transaction
    boundaries, idempotency, concurrency, error handling, security, observability, and
