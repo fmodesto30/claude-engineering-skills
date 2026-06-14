@@ -1,0 +1,67 @@
+# ─────────────────────────────────────────────────────────────
+# Copyrighted / source study material — NEVER commit
+# (books are read locally as temporary study only)
+# ─────────────────────────────────────────────────────────────
+*.pdf
+*.epub
+*.mobi
+*.azw
+*.azw3
+*.djvu
+*.cbz
+*.cbr
+*.fb2
+
+# Raw study notes & extraction artifacts (kept strictly local)
+notes/
+_work/
+_synthesis/
+scratch/
+*.raw.md
+*-raw.md
+*.notes.md
+
+# ─────────────────────────────────────────────────────────────
+# Secrets / credentials / certificates — NEVER commit
+# ─────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+*.jks
+*.crt
+*.cer
+*.der
+id_rsa*
+id_ed25519*
+*.token
+application-local.*
+application-secret.*
+
+# ─────────────────────────────────────────────────────────────
+# Real logs / payloads / dumps (only synthetic samples allowed)
+# ─────────────────────────────────────────────────────────────
+*.log
+logs/
+*.dump
+*.hprof
+real-payloads/
+captured/
+
+# ─────────────────────────────────────────────────────────────
+# Build / IDE / OS noise
+# ─────────────────────────────────────────────────────────────
+target/
+build/
+out/
+bin/
+.gradle/
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
