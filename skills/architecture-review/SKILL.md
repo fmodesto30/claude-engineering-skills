@@ -76,9 +76,15 @@ defers line-by-line concerns to `java-pr-review`.
      store/replica, or distinct read views. Use it to judge whether the separation is warranted at
      all (a same-store read-only projection often suffices), whether the read model has an owner and
      a rebuild path, and whether eventual consistency and read-your-own-writes are handled.
+   - [`../../lenses/cdc.md`](../../lenses/cdc.md) — when a committed change in one datastore must be
+     captured and streamed to another system (a read model, search index, cache, warehouse, or
+     another service), or an outbox is relayed by change data capture. Use it to judge whether a CDC
+     pipeline is warranted at all (an intentional domain event often suffices when you own the
+     source), whether the capture point is a raw table or an intentional outbox, and whether deletes,
+     ordering, idempotency, and lag are handled.
    - [`../../rules/severity-rubric.md`](../../rules/severity-rubric.md) — always; classify every
      finding `MUST` / `SHOULD` / `NIT` / `NO_COMMENT`.
-   - *(More shared lenses — cdc, event-driven, spring-production-readiness — are added
+   - *(More shared lenses — event-driven, spring-production-readiness — are added
      here as they land in `lenses/`.)*
 5. **Prioritize architecture-level concerns** the line reviewer cannot judge:
    - **Context boundaries & coupling** — does the change respect bounded-context boundaries, or does
