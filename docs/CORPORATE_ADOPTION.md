@@ -20,12 +20,14 @@ This file contains **no corporate content**. It is a generic process and guardra
 
 ## Current public reference (snapshot — verify against the live repo)
 
-- **Architecture:** Skill = workflow/type of work · Lens = reusable engineering knowledge
-  (`lenses/`) · Reference = skill-local material (`skills/<name>/references/`) · Rule = global
-  policy · Template = output format · Hook = deterministic enforcement.
-- **Skill:** `java-pr-review` (`skills/java-pr-review/SKILL.md`) consuming
-  `references/severity-rubric.md`.
-- **Lenses (growing):** `design-patterns`, `clean-code`, `testing`.
+- **Architecture:** Skill = workflow/type of work (`skills/`) · Lens = reusable engineering
+  knowledge (`lenses/`) · Rule = global rule/policy (`rules/`, e.g. the severity rubric) ·
+  Reference = skill-local material (`skills/<name>/references/`) · Template = output format ·
+  Hook = deterministic enforcement (CI + `scripts/sanitization-check.sh`).
+- **Skills:** `java-pr-review` (`skills/java-pr-review/SKILL.md`) for diff/PR review, and
+  `architecture-review` (`skills/architecture-review/SKILL.md`) for system/design review; both
+  consume the shared `rules/severity-rubric.md`.
+- **Lenses (growing):** `design-patterns`, `clean-code`, `testing`, `ddd`.
 - **Branching:** gitflow (`main` / `develop` / `feat/*`); checkpoint + explicit approval before
   every commit and push.
 
@@ -109,14 +111,17 @@ Do not scaffold dozens of empty files. Recommended MVP:
 internal-claude-engineering-skills/
   README.md
   .gitignore
+  rules/
+    severity-rubric.md
   skills/
     java-pr-review/
       SKILL.md
-      references/
-        severity-rubric.md
+    architecture-review/
+      SKILL.md
   lenses/
     clean-code.md
     design-patterns.md
+    ddd.md
     testing.md
     spring-production-readiness.md
   docs/
