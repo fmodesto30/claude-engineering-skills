@@ -24,10 +24,12 @@ This file contains **no corporate content**. It is a generic process and guardra
   knowledge (`lenses/`) · Rule = global rule/policy (`rules/`, e.g. the severity rubric) ·
   Reference = skill-local material (`skills/<name>/references/`) · Template = output format ·
   Hook = deterministic enforcement (CI + `scripts/sanitization-check.sh`).
-- **Skills:** `java-pr-review` (`skills/java-pr-review/SKILL.md`) for diff/PR review, and
-  `architecture-review` (`skills/architecture-review/SKILL.md`) for system/design review; both
-  consume the shared `rules/severity-rubric.md`.
-- **Lenses (growing):** `design-patterns`, `clean-code`, `testing`, `ddd`.
+- **Two skill tracks, one shared lens set:** **review** skills consume the lenses *evaluatively* —
+  `java-pr-review` (diff/PR) and `architecture-review` (system/design), both using
+  `rules/severity-rubric.md`; the **construction** skill consumes the *same* lenses *generatively* —
+  `spec-author` (`skills/spec-author/SKILL.md`) produces a prescriptive spec via `templates/spec.md`,
+  graded by `rules/spec-rubric.md`.
+- **Lenses (growing):** `design-patterns`, `clean-code`, `testing`, `ddd`, `saga`, `cqrs`, `cdc`.
 - **Branching:** gitflow (`main` / `develop` / `feat/*`); checkpoint + explicit approval before
   every commit and push.
 
