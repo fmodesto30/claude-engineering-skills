@@ -4,7 +4,7 @@ Reusable test-quality knowledge for Java/Spring: what a test actually asserts, w
 
 ## How skills use this lens
 
-Today the only consumer is `java-pr-review`. It applies this lens with a diff/PR focus: the unit of review is the **changed tests** and the **code under change** they are meant to protect — not the whole test suite, not a coverage audit. Load this lens only when the diff touches tests or touches production code that carries enough risk to deserve a test. It is not generalized for hypothetical future skills; keep the scope to PR review.
+This lens has two consumers, used with opposite intents. **`java-pr-review`** reads it **evaluatively**, with a diff/PR focus: the unit of review is the **changed tests** and the **code under change** they are meant to protect — not the whole test suite, not a coverage audit. **`spec-author`** reads it **generatively**, to write acceptance criteria a test could fail for the right reason while deciding what to build. Load this lens only when the diff touches tests or risk-bearing production code, or when a spec needs its acceptance criteria shaped; keep the scope to those, never a coverage audit.
 
 ## Purpose
 
