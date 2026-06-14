@@ -65,9 +65,15 @@ defers line-by-line concerns to `java-pr-review`.
      boundary, an event for fan-out, a facade over a subsystem, a strategy for a real axis of
      variation) reduce real complexity and risk, or is it ceremony that adds indirection without
      buying anything? Judge the structure against the problem the design actually has.
+   - [`../../lenses/saga.md`](../../lenses/saga.md) — when the change maintains consistency across
+     more than one aggregate, datastore, or service without a distributed transaction: a multi-step
+     workflow whose steps can each fail, compensation/rollback, choreography vs. orchestration,
+     idempotency under at-least-once delivery, or the dual-write/outbox problem. Use it to judge
+     whether a saga is even warranted (often one local transaction suffices) and whether
+     compensation, idempotency, and lost isolation are handled.
    - [`../../rules/severity-rubric.md`](../../rules/severity-rubric.md) — always; classify every
      finding `MUST` / `SHOULD` / `NIT` / `NO_COMMENT`.
-   - *(More shared lenses — saga, cqrs, cdc, event-driven, spring-production-readiness — are added
+   - *(More shared lenses — cqrs, cdc, event-driven, spring-production-readiness — are added
      here as they land in `lenses/`.)*
 5. **Prioritize architecture-level concerns** the line reviewer cannot judge:
    - **Context boundaries & coupling** — does the change respect bounded-context boundaries, or does
