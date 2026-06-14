@@ -71,6 +71,14 @@ paraphrased or transcribed.
 - **All examples are synthetic and domain-neutral** — `Order`, `Payment`, `Notification`,
   `Report`, `Customer`, `Invoice` and similar — with no relation to any real system.
 
+## Documentation
+
+- [docs/SANITIZATION_POLICY.md](docs/SANITIZATION_POLICY.md) — the full sanitization rules,
+  clean-room authoring process, and pre-commit checklist (the section above is the short version).
+- [docs/CORPORATE_ADOPTION.md](docs/CORPORATE_ADOPTION.md) — a ready-to-use prompt for a Claude
+  Code instance inside a corporate environment to read this sanitized reference and bootstrap an
+  **internal** version behind the corporate sanitization gate. No corporate content lives here.
+
 ## Contributing rules
 
 1. No PDFs, EPUBs, books, or copyrighted excerpts.
