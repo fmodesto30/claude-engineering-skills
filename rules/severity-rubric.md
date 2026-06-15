@@ -1,9 +1,11 @@
 # Severity Rubric
 
-The shared severity vocabulary for every `java-pr-review` lens. Its job is to keep reviews
-*useful*: to separate the handful of findings that matter from the noise that erodes trust in
-automated review. Every lens classifies its findings with these four levels and obeys the
-overriding rule below.
+The shared severity vocabulary for every review and audit lens and skill in this repo — the
+Java/Spring review and architecture lenses and meta lenses such as `agent-skills` alike. Its job is
+to keep reviews and audits *useful*: to separate the handful of findings that matter from the noise
+that erodes trust in automated review. Every consumer classifies its findings with these four levels
+and obeys the overriding rule below; the calibration examples further down are Java/Spring-specific,
+but the four levels apply unchanged to a meta lens with its own examples.
 
 ## The four levels
 
@@ -46,7 +48,7 @@ If a rule can be automated, it is not a review finding. A review's value is the 
 linter cannot make: correctness, design, transactions, idempotency, concurrency, security,
 observability, and production risk.
 
-## Java/Spring calibration examples
+## Calibration examples (Java/Spring track)
 
 **MUST**
 - Mutable instance fields on a default singleton-scoped Spring bean read/written across request

@@ -33,7 +33,7 @@ knows when to stay silent.
 2. **Get the diff.** Review the PR diff (changed files plus enough surrounding context to judge
    correctness and intent).
 3. **Apply the severity rubric.** Classify every finding `MUST` / `SHOULD` / `NIT` /
-   `NO_COMMENT` per [references/severity-rubric.md](references/severity-rubric.md), and obey the
+   `NO_COMMENT` per [../../rules/severity-rubric.md](../../rules/severity-rubric.md), and obey the
    overriding rule: every finding names a concrete consequence.
 4. **Consult the lenses this skill uses**, loading only the ones whose structural area the diff
    actually touches (never just because a pattern name appears):
@@ -42,10 +42,32 @@ knows when to stay silent.
      boundaries, cross-cutting behavior, or eventing. Apply it with a **diff/PR focus** — *does
      this pattern in the diff make the code simpler and safer, or is it ceremony/overengineering?*
      — **not** as a broad architectural review (that is a separate skill's job).
-   - [`references/severity-rubric.md`](references/severity-rubric.md) — always; classify every
+   - [`../../lenses/clean-code.md`](../../lenses/clean-code.md) — when the diff touches a long or
+     growing method/class, new names, comments, duplicated logic, tangled control flow, confused
+     responsibility, or a small in-scope refactor. Apply it with a **diff/PR focus** on the changed
+     lines, defer pure style to linters, and bias toward restraint (most readability observations
+     are `NIT` or `NO_COMMENT`).
+   - [`../../lenses/testing.md`](../../lenses/testing.md) — when the diff adds or changes tests, or
+     changes risk-bearing production code (payment, auth, persistence, money math) that should be
+     tested. Apply it with a **diff/PR focus** on the changed tests and the code under change: judge
+     whether a test can fail for the right reason, never demand coverage numbers, and defer test
+     style to linters.
+   - [`../../lenses/spring-production-readiness.md`](../../lenses/spring-production-readiness.md) —
+     when the diff touches a process/network boundary (HTTP client, DB query, broker, cache), a state
+     change reachable by retry/redelivery, a transaction or `@Async`/`@Cacheable`/`@Scheduled`
+     boundary, shared mutable state on a bean, a query in a loop or an unbounded result set, or a
+     resource (stream, connection, lock). Apply it with a **diff/PR focus** at the line/method level —
+     name the runtime failure mode (pool exhaustion, double effect, data race, leak, partial write) —
+     and stay silent on speculative hardening with no named failure.
+   - [`../../lenses/solid.md`](../../lenses/solid.md) — when the diff moves a responsibility boundary
+     (a class/method taking a second reason to change), a type hierarchy or `instanceof`/`switch`
+     dispatch that must stay substitutable, an interface's shape, or the direction of a dependency
+     (high-level policy reaching for a concrete/infra detail). Apply it with a **diff/PR focus** and
+     **heavy restraint** — most SOLID observations are `NO_COMMENT`; raise one only when a principle's
+     violation has a named consequence (a change forces editing unrelated code, a polymorphic caller
+     breaks, a needed test seam is blocked), never because a layer or interface is "missing".
+   - [`../../rules/severity-rubric.md`](../../rules/severity-rubric.md) — always; classify every
      finding `MUST` / `SHOULD` / `NIT` / `NO_COMMENT`.
-   - *(More shared lenses — testing, SOLID, clean-code, Spring production-readiness — are
-     declared here as they are added to `lenses/`.)*
 5. **Prioritize reasoning-heavy concerns** the linter cannot catch: correctness, transaction
    boundaries, idempotency, concurrency, error handling, security, observability, and
    production risk.

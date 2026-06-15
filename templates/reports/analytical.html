@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<!--
+  TEMPLATE: ANALYTICAL REPORT (diagnostic / exploratory analysis)
+  ----------------------------------------------------------------
+  This is a FILL-IN template. Replace every [[PLACEHOLDER]] and the
+  neutral example content with your real (but non-sensitive) data.
+  DELETE all guidance comments (<!-- ... -->) before sharing.
+
+  RENDERS A VALIDATED AnalysisSpec (Status: Validated).
+  This template is the human-readable rendering of an AnalysisSpec that
+  has already passed validation. Its job is to SURFACE — not flatten —
+  what the spec carries: every finding's fact / inference / hypothesis /
+  recommendation TAG, its CONFIDENCE, the EVIDENCE it rests on, and the
+  analysis LIMITATIONS. Do not collapse a hypothesis into a flat claim,
+  and do not drop confidence or limitations to make the page tidier:
+  flattening these is exactly the misrepresentation the rigor audit flags.
+
+  USE THIS SHAPE WHEN: you are diagnosing a system or dataset,
+  often across environments (dev / hom / prod). Audience: engineers
+  and tech leads. Lead with the QUESTION and the HEADLINE FINDING.
+
+  SECURITY: a report shows RESULTS, not credentials. Never write any
+  password, token, connection string, API key, or secret into this
+  file. Describe HOW numbers were obtained (method), never the
+  credentials themselves. Credentials are INPUTS ONLY — never output.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analytical Report — [[SUBJECT]]</title>
+<style>
+  :root {
+    --ink: #1c1c1c; --muted: #5b5b5b; --line: #d7d7d7;
+    --accent: #34506b; --soft: #f4f6f8; --bar: #6f8fae;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font: 15px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink); max-width: 920px; margin: 2rem auto; padding: 0 1.25rem;
+  }
+  h1 { font-size: 1.6rem; margin: 0 0 .25rem; }
+  h2 { font-size: 1.15rem; margin: 2rem 0 .6rem; border-bottom: 2px solid var(--accent);
+       padding-bottom: .25rem; color: var(--accent); }
+  h3 { font-size: 1rem; margin: 1.2rem 0 .4rem; }
+  .meta { background: var(--soft); border: 1px solid var(--line); border-radius: 6px;
+          padding: .75rem 1rem; margin: 1rem 0 .5rem; }
+  .meta dl { display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1rem; margin: 0; }
+  .meta dt { color: var(--muted); font-weight: 600; }
+  .meta dd { margin: 0; }
+  .lead { font-size: 1.05rem; background: #fffbe9; border-left: 4px solid #d8b637;
+          padding: .7rem 1rem; border-radius: 0 6px 6px 0; }
+  table { border-collapse: collapse; width: 100%; margin: .6rem 0; font-size: .92rem; }
+  th, td { border: 1px solid var(--line); padding: .45rem .6rem; text-align: left; }
+  th { background: var(--soft); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .bar-row { display: grid; grid-template-columns: 70px 1fr 70px; align-items: center;
+             gap: .5rem; margin: .25rem 0; }
+  .bar-track { background: var(--soft); border: 1px solid var(--line); border-radius: 3px; }
+  .bar-fill { background: var(--bar); height: 16px; border-radius: 3px; }
+  /* Data-flow / lineage diagram — plain inline SVG, no library, no external refs. */
+  .flow { max-width: 100%; height: auto; margin: .6rem 0; color: var(--accent); }
+  .flow-node rect { fill: var(--soft); stroke: var(--line); stroke-width: 1.5; }
+  .flow-source rect { fill: #eef2f6; }
+  .flow-transform rect { fill: #e7eef5; stroke: var(--accent); }
+  .flow-output rect { fill: #e7f0e7; stroke: #b9d4b9; }
+  .flow-title { fill: var(--ink); font-size: 13px; font-weight: 700; text-anchor: middle; }
+  .flow-sub { fill: var(--muted); font-size: 11px; text-anchor: middle; }
+  .flow-edge line { stroke: var(--accent); stroke-width: 1.5; }
+  .flow-elabel { fill: var(--muted); font-size: 11px; font-style: italic; text-anchor: middle; }
+  .muted { color: var(--muted); }
+  /* Tags that carry the AnalysisSpec finding TYPE — keep them visible, never flatten. */
+  .tag { display: inline-block; border-radius: 10px; padding: .05rem .5rem; font-size: .72rem;
+         font-weight: 700; letter-spacing: .03em; border: 1px solid var(--line); white-space: nowrap; }
+  .tag-fact { background: #e7f0e7; border-color: #b9d4b9; color: #2f5d2f; }
+  .tag-inference { background: #e7eef5; border-color: #b8cce0; color: #2f4f6b; }
+  .tag-hypothesis { background: #fdf2e2; border-color: #e6cda0; color: #8a5a16; }
+  .tag-recommendation { background: #f1e9f5; border-color: #d3c6e6; color: #5a3f7a; }
+  /* Confidence marker — High / Medium / Low, sourced from the spec's confidence field. */
+  .conf { display: inline-block; font-size: .74rem; font-weight: 700; }
+  .conf-high { color: #2f6b4f; } .conf-medium { color: #8a5a16; } .conf-low { color: #b14242; }
+  .provenance { background: var(--soft); border: 1px solid var(--line); border-left: 4px solid var(--accent);
+                border-radius: 0 6px 6px 0; padding: .75rem 1rem; margin: 1rem 0; font-size: .9rem; }
+  .provenance dl { display: grid; grid-template-columns: max-content 1fr; gap: .3rem 1rem; margin: 0; }
+  .provenance dt { color: var(--muted); font-weight: 700; }
+  .provenance dd { margin: 0; }
+  .provenance .asof { font-weight: 700; color: var(--ink); }
+  footer { margin-top: 2.5rem; border-top: 1px solid var(--line); padding-top: .6rem;
+           font-size: .82rem; color: var(--muted); }
+  @media print { body { margin: 0; max-width: none; } h2 { page-break-after: avoid; } }
+</style>
+</head>
+<body>
+
+<!-- ===== METADATA HEADER ===== -->
+<h1>Analytical Report — [[SUBJECT, e.g. Datastore usage &amp; cost]]</h1>
+<div class="meta">
+  <dl>
+    <dt>Owner / author</dt><dd>[[NAME, ROLE]]</dd>
+    <dt>Date</dt><dd>[[YYYY-MM-DD]]</dd>
+    <dt>Scope</dt><dd>[[what is in / out of scope]]</dd>
+    <dt>Environment(s)</dt><dd>dev, hom, prod</dd>
+  </dl>
+</div>
+
+<!-- ===== 1. CONTEXT &amp; SCOPE — lead with the QUESTION + HEADLINE FINDING ===== -->
+<section>
+  <h2>1. Context &amp; scope</h2>
+  <p class="lead">
+    <!-- One or two sentences: the question that prompted this analysis,
+         then the single most important finding. -->
+    <strong>Question:</strong> Where is datastore cost concentrated across
+    dev / hom / prod, and is it justified by traffic?
+    <strong>Headline finding:</strong> prod accounts for ~78% of monthly
+    cost while hom carries idle capacity worth ~[[$X]]/month.
+  </p>
+  <p class="muted">
+    <!-- Boundaries: what period, which services, what is explicitly excluded. -->
+    Covers the Order and Payment datastores for the period
+    [[YYYY-MM-DD]] – [[YYYY-MM-DD]]. Excludes Notification queue costs.
+  </p>
+</section>
+
+<!-- ===== 2. DATA SOURCES &amp; METHOD — HOW numbers were obtained, NEVER credentials ===== -->
+<section>
+  <h2>2. Data sources &amp; method</h2>
+  <!-- State sources by name/role and the technique. Do NOT include any
+       connection string, password, token, or secret. -->
+  <table>
+    <thead><tr><th>Source</th><th>Environment</th><th>How obtained</th></tr></thead>
+    <tbody>
+      <tr><td>Order datastore metrics</td><td>dev / hom / prod</td>
+          <td>Read-only metrics export, aggregated per day</td></tr>
+      <tr><td>Cost ledger</td><td>prod</td>
+          <td>Monthly billing export, grouped by resource tag</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">
+    Access used a read-only role provided out of band.
+    <!-- OMIT this whole sentence if not relevant. Never name the secret. -->
+    Credentials are not reproduced in this report.
+  </p>
+</section>
+
+<!-- ===== 3. DATA-FLOW DIAGRAM — only when the analysis spans multiple sources
+                or is ABOUT the data path (lineage / data-quality). OMIT otherwise. =====
+     This block is a COMPONENT of the Analytical shape, not a new report type.
+     It must ANSWER A QUESTION — "where did these numbers come from / what feeds
+     this read model?" — never decorate. If it does not make the lineage legible,
+     delete the whole section and keep §2's sources table instead.
+
+     The nodes and edges come STRAIGHT FROM the AnalysisSpec, not invented for the
+     picture: node labels are the spec's `sources` (and the output/consumer);
+     edge labels are the `transformations` (dedup, reconcile, join at env grain).
+     Use neutral source TYPES only (a Glue cost dataset, a DynamoDB usage table,
+     a Java service config) — never a real company, account, ARN, or endpoint.
+
+     Drawn as PLAIN inline SVG — rects + arrows + text. No chart/diagram library,
+     no external refs, no web fonts: self-contained and print-friendly, exactly
+     like the CSS bars above. Colors reuse the page's CSS variables. -->
+<section>
+  <h2>3. Data flow &amp; lineage</h2>
+  <p class="muted">
+    Where these numbers come from: three sources are reconciled and joined at
+    environment grain, then analysed per env. Each box is a source or output the
+    AnalysisSpec records (§2); each arrow is a transformation it records.
+  </p>
+  <svg class="flow" viewBox="0 0 880 300" width="100%" role="img"
+       aria-label="Data-flow diagram: a Glue cost dataset, a DynamoDB usage table and a Java service config are reconciled and joined at environment grain, then analysed per environment.">
+    <defs>
+      <!-- Arrowhead; uses currentColor so it follows the stroke color. -->
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7"
+              markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+      </marker>
+    </defs>
+
+    <!-- ----- SOURCE NODES (left column) ----- -->
+    <g class="flow-node flow-source">
+      <rect x="10" y="20" width="200" height="56" rx="6"/>
+      <text x="110" y="43" class="flow-title">Glue cost dataset</text>
+      <text x="110" y="62" class="flow-sub">prod · daily, per resource tag</text>
+    </g>
+    <g class="flow-node flow-source">
+      <rect x="10" y="122" width="200" height="56" rx="6"/>
+      <text x="110" y="145" class="flow-title">DynamoDB usage table</text>
+      <text x="110" y="164" class="flow-sub">dev / hom / prod · metered</text>
+    </g>
+    <g class="flow-node flow-source">
+      <rect x="10" y="224" width="200" height="56" rx="6"/>
+      <text x="110" y="247" class="flow-title">Java service config</text>
+      <text x="110" y="266" class="flow-sub">capacity per env</text>
+    </g>
+
+    <!-- ----- TRANSFORMATION / RECONCILIATION NODE (middle) ----- -->
+    <g class="flow-node flow-transform">
+      <rect x="330" y="112" width="220" height="76" rx="6"/>
+      <text x="440" y="142" class="flow-title">Reconcile &amp; join</text>
+      <text x="440" y="162" class="flow-sub">dedup · reconcile to source ·</text>
+      <text x="440" y="178" class="flow-sub">join at env grain</text>
+    </g>
+
+    <!-- ----- OUTPUT / CONSUMER NODE (right) ----- -->
+    <g class="flow-node flow-output">
+      <rect x="660" y="112" width="210" height="76" rx="6"/>
+      <text x="765" y="148" class="flow-title">Per-env analysis</text>
+      <text x="765" y="168" class="flow-sub">cost &amp; usage by dev/hom/prod</text>
+    </g>
+
+    <!-- ----- EDGES (labelled with the transformation) ----- -->
+    <g class="flow-edge">
+      <!-- sources -> reconcile -->
+      <line x1="210" y1="48"  x2="330" y2="135" marker-end="url(#arrow)"/>
+      <line x1="210" y1="150" x2="330" y2="150" marker-end="url(#arrow)"/>
+      <line x1="210" y1="252" x2="330" y2="165" marker-end="url(#arrow)"/>
+      <!-- reconcile -> output -->
+      <line x1="550" y1="150" x2="660" y2="150" marker-end="url(#arrow)"/>
+      <text x="270" y="86"  class="flow-elabel">dedup</text>
+      <text x="605" y="142" class="flow-elabel">join @ env grain</text>
+    </g>
+  </svg>
+</section>
+
+<!-- ===== 4. FINDINGS — each finding carries its TYPE, CONFIDENCE and EVIDENCE ===== -->
+<section>
+  <h2>4. Findings</h2>
+
+  <!-- Each row below maps 1:1 to an AnalysisSpec finding. Carry the spec
+       fields STRUCTURALLY, do not flatten them:
+         · Type       -> findings[].type   (FACT | INFERENCE | HYPOTHESIS | RECOMMENDATION)
+         · Confidence -> findings[].confidence (High | Medium | Low)
+         · Evidence   -> findings[].evidence (a reference into §2 sources, e.g. E1)
+       A FACT is observed in the data; an INFERENCE is reasoned from facts;
+       a HYPOTHESIS is unconfirmed and MUST stay tagged as such; a
+       RECOMMENDATION is an action. Rendering a hypothesis as if it were a
+       fact, or dropping its confidence, is a misrepresentation. -->
+  <h3>4.0 Findings register</h3>
+  <table>
+    <thead>
+      <tr><th>#</th><th>Finding</th><th>Type</th><th>Confidence</th><th>Evidence</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>F1</td>
+        <td>prod accounts for ~78% of monthly datastore cost.</td>
+        <td><span class="tag tag-fact">FACT</span></td>
+        <td><span class="conf conf-high">High</span></td>
+        <td>E2 (cost ledger)</td>
+      </tr>
+      <tr>
+        <td>F2</td>
+        <td>hom carries always-on capacity that is idle outside test windows.</td>
+        <td><span class="tag tag-inference">INFERENCE</span></td>
+        <td><span class="conf conf-medium">Medium</span></td>
+        <td>E1 (req/s vs. capacity)</td>
+      </tr>
+      <tr>
+        <td>F3</td>
+        <td>prod read replicas are over-provisioned for the observed read ratio.</td>
+        <td><span class="tag tag-hypothesis">HYPOTHESIS</span></td>
+        <td><span class="conf conf-low">Low</span></td>
+        <td>E1 (partial; needs peak-window sample)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>4.1 Storage by environment</h3>
+  <table>
+    <thead>
+      <tr><th>Environment</th><th class="num">Records</th>
+          <th class="num">Storage (GB)</th><th class="num">Avg req/s</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>dev</td><td class="num">120,000</td><td class="num">4.1</td><td class="num">2</td></tr>
+      <tr><td>hom</td><td class="num">480,000</td><td class="num">18.0</td><td class="num">9</td></tr>
+      <tr><td>prod</td><td class="num">9,300,000</td><td class="num">312.5</td><td class="num">740</td></tr>
+    </tbody>
+  </table>
+
+  <h3>4.2 Relative cost (CSS bar — replace with a real chart if desired)</h3>
+  <!-- Pure-CSS horizontal bars. Width % = value / max. No chart library. -->
+  <div class="bar-row"><span>dev</span>
+    <span class="bar-track"><span class="bar-fill" style="width:6%"></span></span>
+    <span class="num">[[$X]]</span></div>
+  <div class="bar-row"><span>hom</span>
+    <span class="bar-track"><span class="bar-fill" style="width:16%"></span></span>
+    <span class="num">[[$X]]</span></div>
+  <div class="bar-row"><span>prod</span>
+    <span class="bar-track"><span class="bar-fill" style="width:78%"></span></span>
+    <span class="num">[[$X]]</span></div>
+</section>
+
+<!-- ===== 5. COST / IMPACT BREAKDOWN ===== -->
+<section>
+  <h2>5. Cost / impact breakdown</h2>
+  <table>
+    <thead>
+      <tr><th>Driver</th><th class="num">Monthly cost</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>prod read replicas</td><td class="num">[[$X]]</td><td>Sized for peak Order load</td></tr>
+      <tr><td>hom always-on capacity</td><td class="num">[[$X]]</td><td>Idle outside test windows</td></tr>
+      <tr><td>Backups / retention</td><td class="num">[[$X]]</td><td>90-day retention</td></tr>
+      <tr><th>Total</th><th class="num">[[$X]]</th><th></th></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===== 6. RECOMMENDATIONS — actionable, ranked, each with a CONFIDENCE marker ===== -->
+<section>
+  <h2>6. Recommendations</h2>
+  <!-- Every recommendation carries a confidence marker sourced from the
+       AnalysisSpec (findings[].confidence for the RECOMMENDATION-type
+       finding it derives from). A recommendation built on a HYPOTHESIS
+       inherits low confidence and must NOT be presented as certain. -->
+  <ol>
+    <li><span class="tag tag-recommendation">REC</span>
+        <strong>Scale hom to on-demand.</strong>
+        <span class="conf conf-high">Confidence: High</span> —
+        Estimated saving ~[[$X]]/month. Low risk. Derives from F2.</li>
+    <li><span class="tag tag-recommendation">REC</span>
+        <strong>Right-size prod replicas</strong> to observed read ratio.
+        <span class="conf conf-low">Confidence: Low</span> —
+        Medium effort. Derives from F3 (hypothesis): confirm with a peak-window
+        sample before acting.</li>
+    <li><span class="tag tag-recommendation">REC</span>
+        <strong>Shorten backup retention</strong> on dev to 14 days.
+        <span class="conf conf-medium">Confidence: Medium</span> —
+        Low risk. Confirm retention policy before applying.</li>
+  </ol>
+</section>
+
+<!-- ===== PROVENANCE & LIMITATIONS — standardized across all four templates =====
+     Sourced from the AnalysisSpec (provenance + limitations + confidence).
+     The "Data as of" (freshness) line is MANDATORY and must NOT be deleted,
+     even under compression: a number with no as-of date can silently go stale
+     and be read as current. Sources name an OWNER; Limitations and overall
+     Confidence come straight from the spec — do not drop them to tidy the page. -->
+<section>
+  <h2>7. Provenance &amp; limitations</h2>
+  <div class="provenance">
+    <dl>
+      <dt>Data as of</dt><dd class="asof">[[YYYY-MM-DD]] — DO NOT DELETE (freshness)</dd>
+      <dt>Sources</dt><dd>Order datastore metrics (owner: Platform team);
+          Cost ledger (owner: FinOps)</dd>
+      <dt>Filters</dt><dd>Period [[YYYY-MM-DD]] – [[YYYY-MM-DD]]; envs dev / hom / prod;
+          excludes Notification queue costs</dd>
+      <dt>Limitations</dt><dd>F3 (replica over-provisioning) is a hypothesis — no
+          peak-window sample yet; cost ledger aggregated by tag may miss untagged resources</dd>
+      <dt>Confidence</dt><dd><span class="conf conf-medium">Medium overall</span> —
+          headline cost split is High; right-sizing claim is Low</dd>
+    </dl>
+  </div>
+</section>
+
+<!-- ===== APPENDIX — raw detail; OMIT if the report stays high-level ===== -->
+<section>
+  <h2>Appendix — raw detail</h2>
+  <p class="muted">Daily breakdowns, query definitions, and full tables go here.
+     Keep credentials and secrets out of this section as well.</p>
+</section>
+
+<footer>
+  Generated [[YYYY-MM-DD]] · Internal analytical report ·
+  Contains no credentials or secrets.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+# Request: Trend of monthly Order volume (prod) over the last 12 months, for the ops team.
+# Context: Single source ordering_metrics (owner: Data Platform), complete, all 12 months full,
+#   reconciled to the billing export within 0.2%, fresh as of 2025-12-31. No dups, no nulls.
+month,env,order_count,revenue_cents
+2025-01,prod,1000,5000000
+2025-02,prod,1040,5200000
+2025-03,prod,1080,5400000
+2025-04,prod,1130,5650000
+2025-05,prod,1180,5900000
+2025-06,prod,1230,6150000
+2025-07,prod,1290,6450000
+2025-08,prod,1350,6750000
+2025-09,prod,1420,7100000
+2025-10,prod,1490,7450000
+2025-11,prod,1560,7800000
+2025-12,prod,1610,8050000

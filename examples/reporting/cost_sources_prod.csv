@@ -1,0 +1,7 @@
+# Request: What is our prod monthly cost, and should we right-size? (for management)
+# Context: Two sources claim the same November prod cost and disagree by ~2.3x (R$ 42,000 vs
+#   R$ 18,000). billing_prod_export is owned by FinOps and fresh; usage_hom_spreadsheet is unowned,
+#   stale (40 days), and is a hom-derived spreadsheet, not prod billing.
+source,owner,month,cost_cents,as_of
+billing_prod_export,FinOps,2025-11,4200000,2025-12-01
+usage_hom_spreadsheet,unowned,2025-11,1800000,2025-10-22

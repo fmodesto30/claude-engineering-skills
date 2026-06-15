@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<!--
+  TEMPLATE: METRIC-TREND REPORT (one quantity tracked over time)
+  --------------------------------------------------------------
+  This is a FILL-IN template. Replace every [[PLACEHOLDER]] and the
+  neutral example content with your real (but non-sensitive) data.
+  DELETE all guidance comments (<!-- ... -->) before sharing.
+
+  RENDERS A VALIDATED AnalysisSpec (Status: Validated).
+  A trend over time is meaningless without its freshness and counting
+  caveats. This template MUST surface the provenance (especially the
+  "Data as of" line) and the analysis LIMITATIONS, and must keep any
+  fact / inference / hypothesis tag and confidence the spec carries —
+  do not flatten a tentative trend into an apparent certainty.
+
+  USE THIS SHAPE WHEN: you are tracking ONE quantity over time.
+  Audience: ops / business. Lead with the HEADLINE NUMBER and the
+  TREND (period-over-period delta) — not with method or context.
+
+  SECURITY: a report shows RESULTS, not credentials. Never write any
+  password, token, connection string, API key, or secret into this file.
+  Credentials are INPUTS ONLY — never output.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Metric Trend — [[METRIC NAME]]</title>
+<style>
+  :root {
+    --ink: #1c1c1c; --muted: #5b5b5b; --line: #d7d7d7;
+    --accent: #2f6b4f; --soft: #f4f7f5; --bar: #5aa07a; --up: #2f8f4f; --down: #b14242;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font: 15px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink); max-width: 860px; margin: 2rem auto; padding: 0 1.25rem;
+  }
+  h1 { font-size: 1.45rem; margin: 0 0 .25rem; }
+  h2 { font-size: 1.1rem; margin: 1.8rem 0 .55rem; border-bottom: 2px solid var(--accent);
+       padding-bottom: .25rem; color: var(--accent); }
+  .meta { background: var(--soft); border: 1px solid var(--line); border-radius: 6px;
+          padding: .75rem 1rem; margin: 1rem 0; }
+  .meta dl { display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1rem; margin: 0; }
+  .meta dt { color: var(--muted); font-weight: 600; }
+  .meta dd { margin: 0; }
+  /* Headline block — the first thing the reader sees */
+  .headline { display: flex; flex-wrap: wrap; align-items: baseline; gap: 1rem;
+              background: #f0f6f2; border: 1px solid var(--line); border-radius: 8px;
+              padding: 1rem 1.25rem; margin: 1rem 0; }
+  .headline .num { font-size: 2.6rem; font-weight: 700; line-height: 1; }
+  .delta { font-size: 1.1rem; font-weight: 700; }
+  .delta.up { color: var(--up); } .delta.down { color: var(--down); }
+  .headline .label { color: var(--muted); }
+  table { border-collapse: collapse; width: 100%; margin: .6rem 0; font-size: .92rem; }
+  th, td { border: 1px solid var(--line); padding: .4rem .6rem; }
+  th { background: var(--soft); text-align: left; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .muted { color: var(--muted); }
+  svg { max-width: 100%; height: auto; }
+  .conf { display: inline-block; font-size: .8rem; font-weight: 700; }
+  .conf-high { color: #2f8f4f; } .conf-medium { color: #8a5a16; } .conf-low { color: #b14242; }
+  .provenance { background: var(--soft); border: 1px solid var(--line); border-left: 4px solid var(--accent);
+                border-radius: 0 6px 6px 0; padding: .75rem 1rem; margin: 1rem 0; font-size: .9rem; }
+  .provenance dl { display: grid; grid-template-columns: max-content 1fr; gap: .3rem 1rem; margin: 0; }
+  .provenance dt { color: var(--muted); font-weight: 700; }
+  .provenance dd { margin: 0; }
+  .provenance .asof { font-weight: 700; color: var(--ink); }
+  footer { margin-top: 2.5rem; border-top: 1px solid var(--line); padding-top: .6rem;
+           font-size: .82rem; color: var(--muted); }
+  @media print { body { margin: 0; max-width: none; } h2 { page-break-after: avoid; } }
+</style>
+</head>
+<body>
+
+<!-- ===== METADATA HEADER ===== -->
+<h1>Metric Trend — [[METRIC, e.g. Monthly Order volume]]</h1>
+<div class="meta">
+  <dl>
+    <dt>Owner / author</dt><dd>[[NAME, ROLE]]</dd>
+    <dt>Date</dt><dd>[[YYYY-MM-DD]]</dd>
+    <dt>Scope</dt><dd>[[what the metric counts; filters applied]]</dd>
+    <dt>Environment</dt><dd>prod</dd>
+  </dl>
+</div>
+
+<!-- ===== 1. HEADLINE NUMBER + PERIOD-OVER-PERIOD DELTA (lead with this) ===== -->
+<section>
+  <h2>1. Headline</h2>
+  <div class="headline">
+    <span class="num">48,210</span>
+    <span class="label">Orders this month ([[MONTH YYYY]])</span>
+    <!-- Choose .up or .down and the arrow to match the direction. -->
+    <span class="delta up">▲ +6.2% vs last month</span>
+  </div>
+  <p class="muted">One-line interpretation, e.g. growth continues for the
+     fourth consecutive month, driven by repeat Customers.</p>
+</section>
+
+<!-- ===== 2. TREND OVER TIME — inline-SVG sparkline + values table ===== -->
+<section>
+  <h2>2. Trend over time</h2>
+  <!-- Lightweight inline-SVG line chart. Recompute EVERY polyline point AND the last-point
+       circle from the values table below (x evenly spaced, y = chartHeight - value*scale) so the
+       line can never contradict the numbers — a chart that disagrees with its own table is the
+       misleading-chart anti-pattern the reporting lens warns about. Or replace this SVG with a
+       real charting tool. No chart library. -->
+  <svg viewBox="0 0 600 160" role="img" aria-label="Order volume over twelve months">
+    <line x1="40" y1="130" x2="590" y2="130" stroke="#d7d7d7"/>
+    <line x1="40" y1="10"  x2="40"  y2="130" stroke="#d7d7d7"/>
+    <polyline fill="none" stroke="#5aa07a" stroke-width="2"
+      points="40,110 90,104 140,98 190,100 240,90 290,84 340,80 390,72 440,66 490,58 540,50 590,44"/>
+    <!-- last-point marker -->
+    <circle cx="590" cy="44" r="4" fill="#2f6b4f"/>
+  </svg>
+  <p class="muted">Twelve-month Order volume (prod). A real charting tool can
+     replace this SVG; the values below are the source of truth.</p>
+
+  <table>
+    <thead><tr><th>Month</th><th class="num">Orders</th><th class="num">MoM %</th></tr></thead>
+    <tbody>
+      <tr><td>[[M-1]]</td><td class="num">38,400</td><td class="num">—</td></tr>
+      <tr><td>[[M-2]]</td><td class="num">39,900</td><td class="num">+3.9%</td></tr>
+      <tr><td>…</td><td class="num">…</td><td class="num">…</td></tr>
+      <tr><td>[[this month]]</td><td class="num">48,210</td><td class="num">+6.2%</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===== 3. BREAKDOWN BY A DIMENSION ===== -->
+<section>
+  <h2>3. Breakdown by [[dimension, e.g. channel / region]]</h2>
+  <table>
+    <thead><tr><th>Segment</th><th class="num">Orders</th><th class="num">Share</th></tr></thead>
+    <tbody>
+      <tr><td>Web</td><td class="num">30,100</td><td class="num">62%</td></tr>
+      <tr><td>Mobile</td><td class="num">14,500</td><td class="num">30%</td></tr>
+      <tr><td>Partner</td><td class="num">3,610</td><td class="num">8%</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===== 4. NOTABLE MOVEMENTS / ANOMALIES ===== -->
+<section>
+  <h2>4. Notable movements / anomalies</h2>
+  <ul>
+    <li><strong>[[date]]</strong> — single-day spike in Order volume; coincided
+        with a Payment promotion. Not an artifact.</li>
+    <li><strong>[[date]]</strong> — dip explained by a planned maintenance window.</li>
+  </ul>
+  <!-- OMIT this section if the series is uneventful; do not invent anomalies. -->
+</section>
+
+<!-- ===== 5. NOTES &amp; CAVEATS ===== -->
+<section>
+  <h2>5. Notes &amp; caveats</h2>
+  <p class="muted">Counting rule (e.g. Orders counted at creation, not payment),
+     time zone, late-arriving data, and any backfill applied. State how the
+     numbers were obtained — never the credentials used.</p>
+</section>
+
+<!-- ===== 6. PROVENANCE & LIMITATIONS — standardized across all four templates =====
+     Sourced from the AnalysisSpec (provenance + limitations + confidence).
+     The "Data as of" (freshness) line is MANDATORY and must NOT be deleted:
+     a trend with no as-of date can silently go stale and be read as current.
+     Sources name an OWNER; Filters state the counting rule; Limitations and
+     Confidence come straight from the spec. -->
+<section>
+  <h2>6. Provenance &amp; limitations</h2>
+  <div class="provenance">
+    <dl>
+      <dt>Data as of</dt><dd class="asof">[[YYYY-MM-DD]] — DO NOT DELETE (freshness)</dd>
+      <dt>Sources</dt><dd>Order datastore metrics, prod (owner: Platform team)</dd>
+      <dt>Filters</dt><dd>Orders counted at creation; prod only; [[time zone]];
+          last 12 months</dd>
+      <dt>Limitations</dt><dd>Latest month may include late-arriving data and is
+          subject to revision; channel split is an estimate where attribution is incomplete</dd>
+      <dt>Confidence</dt><dd><span class="conf conf-high">High</span> for the headline
+          count; <span class="conf conf-medium">Medium</span> for the channel breakdown</dd>
+    </dl>
+  </div>
+</section>
+
+<footer>
+  Generated [[YYYY-MM-DD]] · Metric-trend report · Contains no credentials or secrets.
+</footer>
+
+</body>
+</html>
