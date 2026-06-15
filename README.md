@@ -48,12 +48,18 @@ lenses/
 ├── cqrs.md                  # separating read (query) from write (command) models
 ├── ddd.md                   # domain modeling: boundaries, aggregates, consistency
 ├── design-patterns.md       # patterns that help vs. hurt (Java/Spring)
+├── reporting.md             # (output) choosing a report's shape by purpose & audience
 ├── saga.md                  # cross-service consistency without distributed transactions
 └── testing.md               # test quality: does a test fail for the right reason?
 rules/
 ├── severity-rubric.md       # global review rubric (MUST/SHOULD/NIT/NO_COMMENT)
 └── spec-rubric.md           # global spec-quality rubric (BLOCKER/SHOULD/NIT/OK)
 templates/
+├── reports/                 # HTML report templates, one per situation
+│   ├── analytical.html      #   diagnostic analysis (usage/cost across envs)
+│   ├── metric-trend.html    #   a quantity over time
+│   ├── discovery-stories.html #  docs -> epics/stories/trilha
+│   └── exec-summary.html    #   decision-first summary for management
 └── spec.md                  # prescriptive engineering-spec format
 skills/
 ├── architecture-review/
@@ -62,6 +68,8 @@ skills/
 │   └── SKILL.md             # (meta) audit & fix a Claude Code .claude/ setup
 ├── java-pr-review/
 │   └── SKILL.md             # review: a Java/Spring PR diff
+├── report/
+│   └── SKILL.md             # construction: HTML report, shape chosen per situation
 └── spec-author/
     └── SKILL.md             # construction: write a prescriptive spec for a change
 scripts/
@@ -111,8 +119,9 @@ Lenses and skills grow by real need, never speculatively. Planned next, in rough
 - **Lenses:** `solid`, `event-driven`, `spring-production-readiness`, `observability`, `security`.
 - **Review skills:** `architecture-review` consumes the architecture lenses (`ddd`, `saga`, `cqrs`,
   `cdc` today; `event-driven` as it lands).
-- **Construction skills:** `spec-author` today; `feature-build` (spec → Java/Spring code) and
-  `app-bootstrap` (scaffold a service or module) as they land — all reusing the lenses generatively.
+- **Construction skills:** `spec-author` and `report` (HTML report whose shape is chosen per
+  situation) today; `feature-build` (spec → Java/Spring code) and `app-bootstrap` (scaffold a
+  service or module) as they land — all reusing the lenses generatively.
 - **Meta/ops skills:** `claude-setup-audit` today (audits & fixes the `.claude/` setup itself against
   the `agent-skills` lens); `skill-author` (scaffold a new skill correctly) as it lands.
 

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<!--
+  TEMPLATE: DISCOVERY-STORIES REPORT (docs -> backlog / learning trail)
+  --------------------------------------------------------------------
+  This is a FILL-IN template. Replace every [[PLACEHOLDER]] and the
+  neutral example content with your real (but non-sensitive) data.
+  DELETE all guidance comments (<!-- ... -->) before sharing.
+
+  USE THIS SHAPE WHEN: you read source documents and turn them into a
+  backlog and a learning trail (trilha). Audience: product owner / team.
+  Lead with the SOURCE MAP (what was read), then epics, then stories,
+  then the sequence/dependencies, then open questions.
+
+  SECURITY: a report shows RESULTS, not credentials. Never write any
+  password, token, connection string, API key, or secret into this file.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discovery &amp; Stories — [[INITIATIVE]]</title>
+<style>
+  :root {
+    --ink: #1c1c1c; --muted: #5b5b5b; --line: #d7d7d7;
+    --accent: #5a3f7a; --soft: #f6f4f9; --chip: #ece5f4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font: 15px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink); max-width: 920px; margin: 2rem auto; padding: 0 1.25rem;
+  }
+  h1 { font-size: 1.5rem; margin: 0 0 .25rem; }
+  h2 { font-size: 1.15rem; margin: 2rem 0 .6rem; border-bottom: 2px solid var(--accent);
+       padding-bottom: .25rem; color: var(--accent); }
+  h3 { font-size: 1rem; margin: 1.1rem 0 .35rem; }
+  .meta { background: var(--soft); border: 1px solid var(--line); border-radius: 6px;
+          padding: .75rem 1rem; margin: 1rem 0; }
+  .meta dl { display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1rem; margin: 0; }
+  .meta dt { color: var(--muted); font-weight: 600; }
+  .meta dd { margin: 0; }
+  table { border-collapse: collapse; width: 100%; margin: .6rem 0; font-size: .92rem; }
+  th, td { border: 1px solid var(--line); padding: .45rem .6rem; text-align: left; vertical-align: top; }
+  th { background: var(--soft); }
+  .epic { display: inline-block; background: var(--chip); border: 1px solid #d3c6e6;
+          border-radius: 12px; padding: .1rem .6rem; font-size: .8rem; margin-right: .35rem; }
+  .story { border: 1px solid var(--line); border-radius: 8px; padding: .8rem 1rem; margin: .8rem 0; }
+  .story h3 { margin-top: 0; }
+  .story .ac { background: var(--soft); border-radius: 6px; padding: .5rem .8rem; margin-top: .5rem; }
+  .narrative { font-style: italic; color: #3a3a3a; }
+  ol.trail { padding-left: 1.2rem; }
+  ol.trail li { margin: .3rem 0; }
+  .muted { color: var(--muted); }
+  footer { margin-top: 2.5rem; border-top: 1px solid var(--line); padding-top: .6rem;
+           font-size: .82rem; color: var(--muted); }
+  @media print { body { margin: 0; max-width: none; } .story { page-break-inside: avoid; } h2 { page-break-after: avoid; } }
+</style>
+</head>
+<body>
+
+<!-- ===== METADATA HEADER ===== -->
+<h1>Discovery &amp; Stories — [[INITIATIVE / FEATURE]]</h1>
+<div class="meta">
+  <dl>
+    <dt>Owner / author</dt><dd>[[NAME, ROLE]]</dd>
+    <dt>Date</dt><dd>[[YYYY-MM-DD]]</dd>
+    <dt>Scope</dt><dd>[[what this backlog covers and excludes]]</dd>
+    <dt>Environment</dt><dd>[[target env, e.g. prod]]</dd>
+  </dl>
+</div>
+
+<!-- ===== 1. SOURCE MAP — what was read, by title/path ===== -->
+<section>
+  <h2>1. Source map</h2>
+  <!-- List every document read. Use a stable title and a path/reference.
+       Do NOT paste secrets or credentials from any source. -->
+  <table>
+    <thead><tr><th>#</th><th>Document</th><th>Reference / path</th><th>Read for</th></tr></thead>
+    <tbody>
+      <tr><td>S1</td><td>Invoice feature brief</td><td>[[/docs/invoice-brief.md]]</td>
+          <td>Scope, business rules</td></tr>
+      <tr><td>S2</td><td>Shipment integration notes</td><td>[[/docs/shipment-notes.md]]</td>
+          <td>External dependencies</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===== 2. EPICS / THEMES ===== -->
+<section>
+  <h2>2. Epics / themes</h2>
+  <ul>
+    <li><span class="epic">E1</span><strong>Invoice generation</strong> — produce an Invoice from an Order.</li>
+    <li><span class="epic">E2</span><strong>Payment reconciliation</strong> — match Payment to Invoice.</li>
+    <li><span class="epic">E3</span><strong>Shipment notification</strong> — notify the Customer on dispatch.</li>
+  </ul>
+</section>
+
+<!-- ===== 3. STORIES — title + As-a/I-want/So-that + acceptance criteria ===== -->
+<section>
+  <h2>3. Stories</h2>
+
+  <div class="story">
+    <h3><span class="epic">E1</span>US-01 · Generate an Invoice from an Order</h3>
+    <p class="narrative">
+      As a <strong>billing operator</strong>,
+      I want <strong>an Invoice generated automatically when an Order is confirmed</strong>,
+      so that <strong>the Customer is billed without manual entry</strong>.
+    </p>
+    <div class="ac">
+      <strong>Acceptance criteria</strong>
+      <ul>
+        <li>Given a confirmed Order, when generation runs, then one Invoice with matching LineItems exists.</li>
+        <li>Money totals on the Invoice equal the sum of LineItem amounts plus applicable TaxRule.</li>
+        <li>Re-running generation for the same Order does not create a duplicate Invoice.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="story">
+    <h3><span class="epic">E2</span>US-02 · Reconcile a Payment against an Invoice</h3>
+    <p class="narrative">
+      As a <strong>finance analyst</strong>,
+      I want <strong>incoming Payments matched to open Invoices</strong>,
+      so that <strong>outstanding balances stay accurate</strong>.
+    </p>
+    <div class="ac">
+      <strong>Acceptance criteria</strong>
+      <ul>
+        <li>A Payment equal to the Invoice total marks the Invoice as settled.</li>
+        <li>A partial Payment reduces the balance and keeps the Invoice open.</li>
+        <li>Every match writes an AuditEntry.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Duplicate the .story block per story. Keep each story small and testable.
+       OMIT stories that are not yet ready rather than padding the list. -->
+</section>
+
+<!-- ===== 4. SEQUENCE &amp; DEPENDENCIES — the trilha / ordering ===== -->
+<section>
+  <h2>4. Sequence &amp; dependencies (trilha)</h2>
+  <ol class="trail">
+    <li>US-01 (Invoice generation) — foundation; no upstream dependency.</li>
+    <li>US-02 (Payment reconciliation) — depends on US-01 (needs an Invoice to match).</li>
+    <li>US-03 (Shipment notification) — independent; can run in parallel.</li>
+  </ol>
+  <p class="muted">Order reflects dependency, not estimate. Note any external
+     dependency (e.g. a Shipment provider) that gates a story.</p>
+</section>
+
+<!-- ===== 5. OPEN QUESTIONS ===== -->
+<section>
+  <h2>5. Open questions</h2>
+  <ul>
+    <li>Which TaxRule applies when an Order spans regions? Owner: [[NAME]].</li>
+    <li>Retention period for AuditEntry records? Owner: [[NAME]].</li>
+  </ul>
+</section>
+
+<footer>
+  Generated [[YYYY-MM-DD]] · Discovery &amp; stories report · Contains no credentials or secrets.
+</footer>
+
+</body>
+</html>

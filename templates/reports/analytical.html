@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<!--
+  TEMPLATE: ANALYTICAL REPORT (diagnostic / exploratory analysis)
+  ----------------------------------------------------------------
+  This is a FILL-IN template. Replace every [[PLACEHOLDER]] and the
+  neutral example content with your real (but non-sensitive) data.
+  DELETE all guidance comments (<!-- ... -->) before sharing.
+
+  USE THIS SHAPE WHEN: you are diagnosing a system or dataset,
+  often across environments (dev / hom / prod). Audience: engineers
+  and tech leads. Lead with the QUESTION and the HEADLINE FINDING.
+
+  SECURITY: a report shows RESULTS, not credentials. Never write any
+  password, token, connection string, API key, or secret into this
+  file. Describe HOW numbers were obtained (method), never the
+  credentials themselves.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analytical Report — [[SUBJECT]]</title>
+<style>
+  :root {
+    --ink: #1c1c1c; --muted: #5b5b5b; --line: #d7d7d7;
+    --accent: #34506b; --soft: #f4f6f8; --bar: #6f8fae;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font: 15px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink); max-width: 920px; margin: 2rem auto; padding: 0 1.25rem;
+  }
+  h1 { font-size: 1.6rem; margin: 0 0 .25rem; }
+  h2 { font-size: 1.15rem; margin: 2rem 0 .6rem; border-bottom: 2px solid var(--accent);
+       padding-bottom: .25rem; color: var(--accent); }
+  h3 { font-size: 1rem; margin: 1.2rem 0 .4rem; }
+  .meta { background: var(--soft); border: 1px solid var(--line); border-radius: 6px;
+          padding: .75rem 1rem; margin: 1rem 0 .5rem; }
+  .meta dl { display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1rem; margin: 0; }
+  .meta dt { color: var(--muted); font-weight: 600; }
+  .meta dd { margin: 0; }
+  .lead { font-size: 1.05rem; background: #fffbe9; border-left: 4px solid #d8b637;
+          padding: .7rem 1rem; border-radius: 0 6px 6px 0; }
+  table { border-collapse: collapse; width: 100%; margin: .6rem 0; font-size: .92rem; }
+  th, td { border: 1px solid var(--line); padding: .45rem .6rem; text-align: left; }
+  th { background: var(--soft); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .bar-row { display: grid; grid-template-columns: 70px 1fr 70px; align-items: center;
+             gap: .5rem; margin: .25rem 0; }
+  .bar-track { background: var(--soft); border: 1px solid var(--line); border-radius: 3px; }
+  .bar-fill { background: var(--bar); height: 16px; border-radius: 3px; }
+  .muted { color: var(--muted); }
+  footer { margin-top: 2.5rem; border-top: 1px solid var(--line); padding-top: .6rem;
+           font-size: .82rem; color: var(--muted); }
+  @media print { body { margin: 0; max-width: none; } h2 { page-break-after: avoid; } }
+</style>
+</head>
+<body>
+
+<!-- ===== METADATA HEADER ===== -->
+<h1>Analytical Report — [[SUBJECT, e.g. Datastore usage &amp; cost]]</h1>
+<div class="meta">
+  <dl>
+    <dt>Owner / author</dt><dd>[[NAME, ROLE]]</dd>
+    <dt>Date</dt><dd>[[YYYY-MM-DD]]</dd>
+    <dt>Scope</dt><dd>[[what is in / out of scope]]</dd>
+    <dt>Environment(s)</dt><dd>dev, hom, prod</dd>
+  </dl>
+</div>
+
+<!-- ===== 1. CONTEXT &amp; SCOPE — lead with the QUESTION + HEADLINE FINDING ===== -->
+<section>
+  <h2>1. Context &amp; scope</h2>
+  <p class="lead">
+    <!-- One or two sentences: the question that prompted this analysis,
+         then the single most important finding. -->
+    <strong>Question:</strong> Where is datastore cost concentrated across
+    dev / hom / prod, and is it justified by traffic?
+    <strong>Headline finding:</strong> prod accounts for ~78% of monthly
+    cost while hom carries idle capacity worth ~[[$X]]/month.
+  </p>
+  <p class="muted">
+    <!-- Boundaries: what period, which services, what is explicitly excluded. -->
+    Covers the Order and Payment datastores for the period
+    [[YYYY-MM-DD]] – [[YYYY-MM-DD]]. Excludes Notification queue costs.
+  </p>
+</section>
+
+<!-- ===== 2. DATA SOURCES &amp; METHOD — HOW numbers were obtained, NEVER credentials ===== -->
+<section>
+  <h2>2. Data sources &amp; method</h2>
+  <!-- State sources by name/role and the technique. Do NOT include any
+       connection string, password, token, or secret. -->
+  <table>
+    <thead><tr><th>Source</th><th>Environment</th><th>How obtained</th></tr></thead>
+    <tbody>
+      <tr><td>Order datastore metrics</td><td>dev / hom / prod</td>
+          <td>Read-only metrics export, aggregated per day</td></tr>
+      <tr><td>Cost ledger</td><td>prod</td>
+          <td>Monthly billing export, grouped by resource tag</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">
+    Access used a read-only role provided out of band.
+    <!-- OMIT this whole sentence if not relevant. Never name the secret. -->
+    Credentials are not reproduced in this report.
+  </p>
+</section>
+
+<!-- ===== 3. FINDINGS — tables + a simple inline-CSS bar chart ===== -->
+<section>
+  <h2>3. Findings</h2>
+
+  <h3>3.1 Storage by environment</h3>
+  <table>
+    <thead>
+      <tr><th>Environment</th><th class="num">Records</th>
+          <th class="num">Storage (GB)</th><th class="num">Avg req/s</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>dev</td><td class="num">120,000</td><td class="num">4.1</td><td class="num">2</td></tr>
+      <tr><td>hom</td><td class="num">480,000</td><td class="num">18.0</td><td class="num">9</td></tr>
+      <tr><td>prod</td><td class="num">9,300,000</td><td class="num">312.5</td><td class="num">740</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.2 Relative cost (CSS bar — replace with a real chart if desired)</h3>
+  <!-- Pure-CSS horizontal bars. Width % = value / max. No chart library. -->
+  <div class="bar-row"><span>dev</span>
+    <span class="bar-track"><span class="bar-fill" style="width:6%"></span></span>
+    <span class="num">[[$X]]</span></div>
+  <div class="bar-row"><span>hom</span>
+    <span class="bar-track"><span class="bar-fill" style="width:16%"></span></span>
+    <span class="num">[[$X]]</span></div>
+  <div class="bar-row"><span>prod</span>
+    <span class="bar-track"><span class="bar-fill" style="width:78%"></span></span>
+    <span class="num">[[$X]]</span></div>
+</section>
+
+<!-- ===== 4. COST / IMPACT BREAKDOWN ===== -->
+<section>
+  <h2>4. Cost / impact breakdown</h2>
+  <table>
+    <thead>
+      <tr><th>Driver</th><th class="num">Monthly cost</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>prod read replicas</td><td class="num">[[$X]]</td><td>Sized for peak Order load</td></tr>
+      <tr><td>hom always-on capacity</td><td class="num">[[$X]]</td><td>Idle outside test windows</td></tr>
+      <tr><td>Backups / retention</td><td class="num">[[$X]]</td><td>90-day retention</td></tr>
+      <tr><th>Total</th><th class="num">[[$X]]</th><th></th></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===== 5. RECOMMENDATIONS — actionable, ranked ===== -->
+<section>
+  <h2>5. Recommendations</h2>
+  <ol>
+    <li><strong>Scale hom to on-demand.</strong> Estimated saving ~[[$X]]/month. Low risk.</li>
+    <li><strong>Right-size prod replicas</strong> to observed read ratio. Medium effort.</li>
+    <li><strong>Shorten backup retention</strong> on dev to 14 days. Low risk.</li>
+  </ol>
+</section>
+
+<!-- ===== APPENDIX — raw detail; OMIT if the report stays high-level ===== -->
+<section>
+  <h2>Appendix — raw detail</h2>
+  <p class="muted">Daily breakdowns, query definitions, and full tables go here.
+     Keep credentials and secrets out of this section as well.</p>
+</section>
+
+<footer>
+  Generated [[YYYY-MM-DD]] · Internal analytical report ·
+  Contains no credentials or secrets.
+</footer>
+
+</body>
+</html>
