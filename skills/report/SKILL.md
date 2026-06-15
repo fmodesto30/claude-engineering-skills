@@ -22,7 +22,8 @@ validated analytical contract, never the starting point:
 ```
 request
   -> (1) understand the DECISION / question the report must support
-  -> (2) DATA-ENGINEERING: discover sources & owners, model grain/keys/relationships, validate quality
+  -> (2) DATA-ENGINEERING: DISCOVER the landscape (which accounts/services/repos/catalogs hold the
+         data, the access path & owner of each), then model grain/keys/relationships and validate quality
   -> (3) DATA-ANALYSIS: pick the method that fits the question, analyze, interpret, state confidence
   -> (4) fill and VALIDATE the AnalysisSpec  (HARD GATE — no HTML until it passes the rigor rule)
   -> (5) REPORTING: choose the narrative and the HTML shape/visuals FROM the AnalysisSpec
@@ -80,15 +81,25 @@ HTML) cannot begin until step 4 (the AnalysisSpec) is filled and passes.
    behind it has no way to know what is relevant; if the decision or question is unclear, **ask**
    before going further (see Restraint rules).
 
-2. **DATA-ENGINEERING — discover and validate the data**, via
-   [`../../lenses/data-engineering.md`](../../lenses/data-engineering.md). Discover the sources and
-   their owners; model the grain, keys, and relationships; and validate quality before trusting any
+2. **DATA-ENGINEERING — discover, then validate the data**, via
+   [`../../lenses/data-engineering.md`](../../lenses/data-engineering.md). **First, DISCOVER the
+   landscape** — before validating or analysing anything, map *where the data actually lives and what
+   you must enter to get it*: enumerate the accounts/projects, the services/stores, the repositories,
+   and the catalogs that hold each piece of data the question needs, and for each record its access
+   path (how it is queried — described, never the credential) and its owner. A question is usually
+   answered only by JOINING several sources across different tools (for example a Glue/Athena-queryable
+   billing dataset, an `Order` count from a relational database behind a Java/Spring service, and a
+   `TaxRule` that lives only in that service's repository) — **you cannot validate or analyse data you
+   have not located**, and a needed source you cannot access or that no one owns is a discovery
+   limitation or a blocker, recorded up front rather than discovered mid-analysis. Then, on the sources
+   you located: model the grain, keys, and relationships, and validate quality before trusting any
    number: schema, types, units, and timezone; duplicates, nulls, and inconsistencies; freshness,
    completeness, and temporal coverage; dangerous joins and row-multiplication; and reconciliation of
-   the source against the result. **If the quality is insufficient to support the question, STOP** —
-   produce a limited or data-quality output that states what is wrong and what cannot be concluded,
-   rather than proceeding to a confident analysis the data cannot back. This stage is the gate that
-   makes "bad data blocks strong conclusions" real.
+   the source against the result. **If a needed source cannot be located or accessed, or the quality is
+   insufficient to support the question, STOP** — produce a limited or data-quality output that states
+   what is wrong or unreachable and what cannot be concluded, rather than proceeding to a confident
+   analysis the data cannot back. This stage is the gate that makes "bad data blocks strong
+   conclusions" real.
 
 3. **DATA-ANALYSIS — analyze and interpret**, via
    [`../../lenses/data-analysis.md`](../../lenses/data-analysis.md). Formulate the question precisely,
@@ -103,7 +114,8 @@ HTML) cannot begin until step 4 (the AnalysisSpec) is filled and passes.
 
 4. **Fill and VALIDATE the AnalysisSpec — the HARD GATE.** Fill the intermediate contract in
    [`../../templates/analysis-spec.md`](../../templates/analysis-spec.md): the business question, the
-   decision supported, the audience, the sources (with owner and freshness), grain, dimensions,
+   decision supported, the audience, the sources (each with the system/account/service/repo it lives
+   in, its access path, owner, and freshness), grain, dimensions,
    measures, time range, filters, transformations, the quality checks and their results, the
    limitations, the analysis method, the findings (each tagged FACT / INFERENCE / HYPOTHESIS /
    RECOMMENDATION), the evidence each finding links to, the confidence, and the recommended report

@@ -82,8 +82,10 @@ established).
 The decision or action this analysis informs — why anyone asked. "Whether to right-size the prod
 datastore for the next quarter"; "whether to approve the PricingRule migration go/no-go". An
 analysis with no decision behind it tends to sprawl; naming the decision bounds what is in scope and
-tells you when you have enough. If the honest answer is "exploratory, no decision yet", say that —
-it legitimately changes how much rigor and how strong a conclusion the situation can bear.
+tells you when you have enough — it is what the source discovery below maps against, so the sources
+you locate are exactly the ones this decision needs, no more. If the honest answer is "exploratory,
+no decision yet", say that — it legitimately changes how much rigor and how strong a conclusion the
+situation can bear.
 -->
 
 ## audience
@@ -98,17 +100,40 @@ reader so the report is not mis-shaped later.
 ## sources
 
 <!--
-Every data source the analysis draws on, each with its OWNER and its FRESHNESS. A source with no
-owner is a source no one can vouch for; a source with no freshness is a source you cannot trust to
-be current. For each: name / table / file, the owner (the team or system of record), how it was
-accessed (the query or extract — described, never the credential), and freshness (as-of timestamp,
-last load time, or "live"). Note the timezone the timestamps are in.
-INVALID: "the database"; a source with no owner; a source whose freshness is unknown and unflagged.
+The discovered LANDSCAPE: every data source the analysis draws on, located BEFORE quality was
+validated, because you cannot validate or analyse data you have not located. A question is usually
+answered only by JOINING several sources across different tools, so map each piece of data the
+business_question needs to a concrete place. For each source record FOUR things:
+- WHERE it lives — the system/account/project, the service/store, the repository, or the catalog
+  (e.g. an AWS account and a Glue/Athena-queryable dataset or an S3 location or a DynamoDB table or
+  CloudWatch metrics; a Java/Spring service repository where config/business rules live in code; a
+  relational database; a message broker such as Debezium/Kafka; a spreadsheet or export). Name the
+  environment (dev / hom / prod) where it applies.
+- ACCESS PATH — how it was reached: the query, the extract, or the API call and its window
+  (described, never the credential).
+- OWNER — the team or system of record that controls it. A source with no owner is one no one can
+  vouch for and no one can grant access to.
+- FRESHNESS — as-of timestamp, last load time, or "live", with the timezone the timestamps are in. A
+  source with no freshness is one you cannot trust to be current.
+A NEEDED source you could not LOCATE, could not ACCESS, or that no one OWNS is itself a discovery
+finding — record it here and carry it into limitations (it constrains or blocks the conclusion);
+never quietly omit it.
+INVALID: "the database"; a source with no owner; a source whose freshness is unknown and unflagged;
+a source whose system/store/repo is unstated so it cannot be re-located.
 Example:
-- `orders` table (prod), owner: Ordering system of record; accessed via a read-only aggregate query
-  over placed_at; freshness: snapshot as-of 2026-06-13 23:59 America/Sao_Paulo.
-- monthly `Invoice` extract (hom), owner: Billing; CSV export; freshness: last load 2026-06-01,
-  KNOWN one load behind prod — recorded as a limitation below.
+- `orders` table (prod), in the relational DB behind the Ordering Java/Spring service; owner:
+  Ordering system of record; access: read-only aggregate query over placed_at; freshness: snapshot
+  as-of 2026-06-13 23:59 America/Sao_Paulo.
+- Cost dataset (prod), in an AWS account, queried via Glue/Athena over the billing partition; owner:
+  Platform; access: read-only Athena query, last full month; freshness: partitions through
+  2026-06-13.
+- `TaxRule` cost-allocation definition, in the Ordering service's repository (in code, not a store);
+  owner: Ordering; access: read from the versioned source at the analysed revision; freshness: tied
+  to that revision.
+- monthly `Invoice` extract (hom), owner: Billing; access: CSV export; freshness: last load
+  2026-06-01, KNOWN one load behind prod — recorded as a limitation below.
+- `hom` cost partition — NEEDED for the cross-env comparison but UNREACHABLE: lives in an account no
+  one present can grant access to; recorded as a discovery limitation that constrains the comparison.
 -->
 
 ## grain
