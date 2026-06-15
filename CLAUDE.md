@@ -12,7 +12,8 @@ A small, sanitized library of **software-engineering skills** for Claude Code. I
 engineering *judgment* — not new tools — so an agent applies the same calibrated,
 consequence-driven standard whether it is **reviewing** code and designs (`java-pr-review`,
 `architecture-review`), **constructing** specs and reports (`spec-author`, `report`), or
-**auditing** a Claude setup (`claude-setup-audit`). First focus: **Java / Spring Boot**. It is
+**auditing and improving** a Claude setup (`claude-setup-audit`, `retrospective`). First focus:
+**Java / Spring Boot**. It is
 built to be **dropped into any Claude CLI and adopted durably**.
 
 The building blocks (see [README.md](README.md#architecture-model) for the full model):
@@ -59,6 +60,7 @@ Five skills across three tracks. Load a skill's lenses only when the change actu
 | Skill | Triggers when | Lens it uses |
 |---|---|---|
 | [`claude-setup-audit`](skills/claude-setup-audit/SKILL.md) | auditing/fixing a `.claude/` setup (skill not triggering, resource won't resolve, secret in config) | `agent-skills` |
+| [`retrospective`](skills/retrospective/SKILL.md) | after a task or a **repeated error** — "save this lesson", "don't repeat this", "configure so this can't happen again", "what did we learn" | `agent-skills` |
 
 **Lenses** (`lenses/`, shared knowledge loaded on demand): `design-patterns`, `clean-code`, `testing`,
 `spring-production-readiness`, `solid`, `ddd`, `saga`, `cqrs`, `cdc`, `data-engineering`,
