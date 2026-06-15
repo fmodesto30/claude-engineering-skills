@@ -117,6 +117,10 @@ paraphrased or transcribed.
 - [docs/CORPORATE_ADOPTION.md](docs/CORPORATE_ADOPTION.md) — a ready-to-use prompt for a Claude
   Code instance inside a corporate environment to read this sanitized reference and bootstrap an
   **internal** version behind the corporate sanitization gate. No corporate content lives here.
+- [docs/field-notes-verification-and-agentic-harness.md](docs/field-notes-verification-and-agentic-harness.md)
+  — sanitized field notes distilled from a real generation-and-verification project: the proof
+  harness, the decision oracle / delegated autonomy, and the agentic operating system. Seeds for
+  future lenses/skills.
 
 ## Roadmap
 
