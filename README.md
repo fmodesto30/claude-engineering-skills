@@ -7,6 +7,15 @@ These are reusable *review lenses* — checklists, heuristics, and severity rubr
 Claude apply the same engineering judgment to every PR, so reviewers stop retyping the same
 comments and juniors can self-review before asking.
 
+## Learn from this repository
+
+Drop this repo into any Claude CLI, open a session in it, and say **"APRENDA COM ESSE
+REPOSITÓRIO"** (or "learn from this repository"). The agent loads [CLAUDE.md](CLAUDE.md), reads
+every skill and lens in full, summarizes what it learned, and then proposes how to **adopt the
+skills durably** in your environment (install them so they auto-trigger every session, or adapt
+them to your stack) — staying read-only until you approve. See the
+[Learn protocol](CLAUDE.md#learn-protocol).
+
 ## Philosophy
 
 - **A pattern or rule is a tool, never a goal.** Nothing is flagged unless a concrete
