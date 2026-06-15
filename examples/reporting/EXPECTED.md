@@ -24,7 +24,9 @@ about whether a file exists.
 
 These are the named situation types from
 [`scripts`](../../scripts) / the rigor rule: **sufficient**, **incomplete**, **duplicated**,
-**contradictory**. One fixture per type.
+**contradictory**. One fixture per type. Fixture **5** adds a **discovery** type — a multi-source
+landscape the analysis must MAP before analyzing — which is not a single CSV but a scenario file
+([`discovery_landscape.md`](discovery_landscape.md)).
 
 ## Conventions
 
@@ -175,6 +177,79 @@ right-size recommendation as though the data agreed.
 
 ---
 
+## 5. discovery — `discovery_landscape.md`
+
+- **Request:** Give the platform team the **cost AND usage of the `Notification` service across
+  `dev` / `hom` / `prod`**, with a **right-sizing recommendation**.
+- **Data:** unlike fixtures 1–4 this is **not one CSV** — it is a multi-source landscape described in
+  [`discovery_landscape.md`](discovery_landscape.md). The answer is spread across **four** systems in
+  different accounts / owners / repos:
+  1. **`cur_daily`** — AWS cost dataset queried via **Glue/Athena** (account `platform-billing`, owner
+     **FinOps**, fresh): cost by `service` x `env` x `day`. Holds the **cost** half (prod ~R$ 42,000,
+     hom ~R$ 9,000, dev ~R$ 6,000 per month).
+  2. **`notification_usage`** — **DynamoDB** table (account `app-prod`, owner **`Notification` squad**):
+     request counts by `env`. Holds the **usage** half — but **only `prod` is populated** (~1.2M
+     req/mo); **`dev` and `hom` are EMPTY** (no rows).
+  3. **`notification-service`** — **Java/Spring** repo (owner **`Notification` squad**): **provisioned
+     capacity** per env in `application-<env>.yml` (prod ~3M/mo). The denominator a right-size compares
+     against.
+  4. **An old ops spreadsheet** — **unowned**, stale (~60 days), with cost numbers that **DISAGREE**
+     with `cur_daily`. The trap source.
+- **Planted condition:** **discovery** — three planted challenges at once: (a) the answer is **spread
+  across four tools/accounts/repos** and only exists after a cross-source join at a consistent `env`
+  grain; (b) **`dev` / `hom` usage is MISSING** (the DynamoDB table is empty for them), so right-sizing
+  is only supportable for `prod`; (c) a **stale, unowned, conflicting** cost source competes with the
+  owned/fresh `cur_daily`. (Technologies are illustrative *source types* to verify against the project,
+  never a real company or system; account names are types, not real ids/ARNs; access paths are inputs
+  only and must not appear in the output.)
+- **Reference reconciliation (env grain):** only `prod` has all three pieces — cost (~R$ 42,000),
+  usage (~1.2M req/mo), capacity (~3M/mo) — so `prod` runs at **~40% of provisioned capacity** (~2.5x
+  headroom): a supportable *prod-only* over-provisioned read. `dev` / `hom` have cost and capacity but
+  **no usage**, so utilization is **uncomputable** for them and right-sizing is unmeasured.
+
+**MUST**
+
+- **MAP the landscape FIRST, before analyzing** — enumerate the **four** systems it must enter, each
+  with its **access path** and **owner**: `cur_daily` via Glue/Athena (account `platform-billing`,
+  FinOps); `notification_usage` in DynamoDB (account `app-prod`, Notification squad); the Java/Spring
+  `notification-service` repo (`application-<env>.yml`, Notification squad); the stale unowned ops
+  spreadsheet — plus the **decision context** (per-env right-sizing for the platform team). This source
+  map is recorded in the AnalysisSpec **before** any number is compared (this is the Discovery-Stories
+  "lead with the source map" discipline applied to a data analysis).
+- **Recognize the answer requires JOINING** cost (`cur_daily` / Glue) + usage (`notification_usage` /
+  DynamoDB) + capacity (`notification-service` / Java repo) **at a consistent `env` grain** — no single
+  source answers "cost AND usage AND right-size"; the conclusion only exists after the cross-source
+  reconcile per environment.
+- **Detect that `dev` / `hom` usage is MISSING** (DynamoDB table empty for them), and therefore confine
+  any right-sizing **conclusion to `prod`** (~40% utilization / ~2.5x headroom -> looks over-provisioned),
+  tagged **INFERENCE/RECOMMENDATION** with its evidence. **`dev` / `hom` right-sizing is unmeasured** and
+  carried as a **limitation / open question**.
+- **Prefer the owned + fresh `cur_daily`** over the stale, unowned spreadsheet for the cost figure, and
+  **flag the conflict** as a limitation — not silently take whichever cost it saw first.
+- Because this is a **lineage / architecture analysis spanning sources**, **produce or call for a
+  DATA-FLOW diagram**: the three trusted sources -> a reconcile/join node at `env` grain -> the per-env
+  cost/usage/utilization output (with the stale spreadsheet shown as a rejected/conflicting input),
+  rendered inline per the reporting lens.
+- Surface **provenance** for every source (account-*type*, owner, access path, freshness) and keep all
+  access/credentials as **inputs only** — none written into the output.
+
+**MUST NOT**
+
+- **Analyze before mapping the landscape** — jump straight to numbers without enumerating the four
+  sources, their owners, and their access paths.
+- **Invent `dev` / `hom` usage** (the empty DynamoDB table), or interpolate/estimate it to complete the
+  three-environment story.
+- Give a **confident all-env right-sizing recommendation** as if `dev` / `hom` utilization were known.
+- **Ignore the access / ownership** of the sources, or **silently adopt** the stale unowned spreadsheet
+  (or average it against `cur_daily`) for the cost number.
+- Write any credential, access path, real account id, ARN, or endpoint into the output.
+
+**REJECT the run if** it analyzes without mapping the landscape first, invents `dev` / `hom` usage,
+gives a confident all-environment right-sizing recommendation, or ignores the access/ownership of the
+sources (e.g. trusts the stale unowned spreadsheet over the owned/fresh `cur_daily`).
+
+---
+
 ## Scoring summary
 
 | # | Fixture | Type | Planted problem | Headline MUST | Verdict / Status expected | Key MUST-NOT (reject trigger) |
@@ -183,6 +258,7 @@ right-size recommendation as though the data agreed.
 | 2 | `order_volume_partial.csv` | incomplete | partial 10-day Dec + null Oct + missing `hom` | partial-period flag + LIMITED run-rate, low confidence | `BLOCKED-by-data-quality` (or `ready` only for hedged run-rate) | reports a Dec drop; fills missing data |
 | 3 | `orders_lineitems_prod.csv` | duplicated | line-item fan-out + dup payment `P3DUP` | order-grain reconcile: 35,500 cents over 5 orders | `BLOCKED-by-data-quality` or `Validated` w/ corrected number | reports row-sum 39,500 or count 13 as fact |
 | 4 | `cost_sources_prod.csv` | contradictory | ~2.3x source conflict; one unowned/stale/`hom` | lead with data-trust problem; prefer owned/fresh prod source, hedge | `BLOCKED-by-data-quality` or hedged recommendation | single confident cost; average; firm right-size |
+| 5 | `discovery_landscape.md` | discovery | 4-source landscape; `dev`/`hom` usage missing; stale unowned conflicting cost source | map the 4 sources (owner+access) FIRST; join cost+usage+capacity at `env` grain; prod-only right-size; data-flow diagram | `Validated` for the prod-only conclusion w/ `dev`/`hom` as open questions (or `BLOCKED-by-data-quality` if the join can't be made) | analyzes without mapping; invents `dev`/`hom` usage; confident all-env right-size; ignores access/ownership |
 
 A fixture **passes** when the produced AnalysisSpec + report exhibits every MUST and none of the
 MUST-NOTs for that row. A limited-but-honest conclusion is a **pass**, not a near-miss
