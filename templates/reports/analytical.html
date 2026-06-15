@@ -58,6 +58,16 @@
              gap: .5rem; margin: .25rem 0; }
   .bar-track { background: var(--soft); border: 1px solid var(--line); border-radius: 3px; }
   .bar-fill { background: var(--bar); height: 16px; border-radius: 3px; }
+  /* Data-flow / lineage diagram — plain inline SVG, no library, no external refs. */
+  .flow { max-width: 100%; height: auto; margin: .6rem 0; color: var(--accent); }
+  .flow-node rect { fill: var(--soft); stroke: var(--line); stroke-width: 1.5; }
+  .flow-source rect { fill: #eef2f6; }
+  .flow-transform rect { fill: #e7eef5; stroke: var(--accent); }
+  .flow-output rect { fill: #e7f0e7; stroke: #b9d4b9; }
+  .flow-title { fill: var(--ink); font-size: 13px; font-weight: 700; text-anchor: middle; }
+  .flow-sub { fill: var(--muted); font-size: 11px; text-anchor: middle; }
+  .flow-edge line { stroke: var(--accent); stroke-width: 1.5; }
+  .flow-elabel { fill: var(--muted); font-size: 11px; font-style: italic; text-anchor: middle; }
   .muted { color: var(--muted); }
   /* Tags that carry the AnalysisSpec finding TYPE — keep them visible, never flatten. */
   .tag { display: inline-block; border-radius: 10px; padding: .05rem .5rem; font-size: .72rem;
@@ -132,9 +142,88 @@
   </p>
 </section>
 
-<!-- ===== 3. FINDINGS — each finding carries its TYPE, CONFIDENCE and EVIDENCE ===== -->
+<!-- ===== 3. DATA-FLOW DIAGRAM — only when the analysis spans multiple sources
+                or is ABOUT the data path (lineage / data-quality). OMIT otherwise. =====
+     This block is a COMPONENT of the Analytical shape, not a new report type.
+     It must ANSWER A QUESTION — "where did these numbers come from / what feeds
+     this read model?" — never decorate. If it does not make the lineage legible,
+     delete the whole section and keep §2's sources table instead.
+
+     The nodes and edges come STRAIGHT FROM the AnalysisSpec, not invented for the
+     picture: node labels are the spec's `sources` (and the output/consumer);
+     edge labels are the `transformations` (dedup, reconcile, join at env grain).
+     Use neutral source TYPES only (a Glue cost dataset, a DynamoDB usage table,
+     a Java service config) — never a real company, account, ARN, or endpoint.
+
+     Drawn as PLAIN inline SVG — rects + arrows + text. No chart/diagram library,
+     no external refs, no web fonts: self-contained and print-friendly, exactly
+     like the CSS bars above. Colors reuse the page's CSS variables. -->
 <section>
-  <h2>3. Findings</h2>
+  <h2>3. Data flow &amp; lineage</h2>
+  <p class="muted">
+    Where these numbers come from: three sources are reconciled and joined at
+    environment grain, then analysed per env. Each box is a source or output the
+    AnalysisSpec records (§2); each arrow is a transformation it records.
+  </p>
+  <svg class="flow" viewBox="0 0 880 300" width="100%" role="img"
+       aria-label="Data-flow diagram: a Glue cost dataset, a DynamoDB usage table and a Java service config are reconciled and joined at environment grain, then analysed per environment.">
+    <defs>
+      <!-- Arrowhead; uses currentColor so it follows the stroke color. -->
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7"
+              markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+      </marker>
+    </defs>
+
+    <!-- ----- SOURCE NODES (left column) ----- -->
+    <g class="flow-node flow-source">
+      <rect x="10" y="20" width="200" height="56" rx="6"/>
+      <text x="110" y="43" class="flow-title">Glue cost dataset</text>
+      <text x="110" y="62" class="flow-sub">prod · daily, per resource tag</text>
+    </g>
+    <g class="flow-node flow-source">
+      <rect x="10" y="122" width="200" height="56" rx="6"/>
+      <text x="110" y="145" class="flow-title">DynamoDB usage table</text>
+      <text x="110" y="164" class="flow-sub">dev / hom / prod · metered</text>
+    </g>
+    <g class="flow-node flow-source">
+      <rect x="10" y="224" width="200" height="56" rx="6"/>
+      <text x="110" y="247" class="flow-title">Java service config</text>
+      <text x="110" y="266" class="flow-sub">capacity per env</text>
+    </g>
+
+    <!-- ----- TRANSFORMATION / RECONCILIATION NODE (middle) ----- -->
+    <g class="flow-node flow-transform">
+      <rect x="330" y="112" width="220" height="76" rx="6"/>
+      <text x="440" y="142" class="flow-title">Reconcile &amp; join</text>
+      <text x="440" y="162" class="flow-sub">dedup · reconcile to source ·</text>
+      <text x="440" y="178" class="flow-sub">join at env grain</text>
+    </g>
+
+    <!-- ----- OUTPUT / CONSUMER NODE (right) ----- -->
+    <g class="flow-node flow-output">
+      <rect x="660" y="112" width="210" height="76" rx="6"/>
+      <text x="765" y="148" class="flow-title">Per-env analysis</text>
+      <text x="765" y="168" class="flow-sub">cost &amp; usage by dev/hom/prod</text>
+    </g>
+
+    <!-- ----- EDGES (labelled with the transformation) ----- -->
+    <g class="flow-edge">
+      <!-- sources -> reconcile -->
+      <line x1="210" y1="48"  x2="330" y2="135" marker-end="url(#arrow)"/>
+      <line x1="210" y1="150" x2="330" y2="150" marker-end="url(#arrow)"/>
+      <line x1="210" y1="252" x2="330" y2="165" marker-end="url(#arrow)"/>
+      <!-- reconcile -> output -->
+      <line x1="550" y1="150" x2="660" y2="150" marker-end="url(#arrow)"/>
+      <text x="270" y="86"  class="flow-elabel">dedup</text>
+      <text x="605" y="142" class="flow-elabel">join @ env grain</text>
+    </g>
+  </svg>
+</section>
+
+<!-- ===== 4. FINDINGS — each finding carries its TYPE, CONFIDENCE and EVIDENCE ===== -->
+<section>
+  <h2>4. Findings</h2>
 
   <!-- Each row below maps 1:1 to an AnalysisSpec finding. Carry the spec
        fields STRUCTURALLY, do not flatten them:
@@ -145,7 +234,7 @@
        a HYPOTHESIS is unconfirmed and MUST stay tagged as such; a
        RECOMMENDATION is an action. Rendering a hypothesis as if it were a
        fact, or dropping its confidence, is a misrepresentation. -->
-  <h3>3.0 Findings register</h3>
+  <h3>4.0 Findings register</h3>
   <table>
     <thead>
       <tr><th>#</th><th>Finding</th><th>Type</th><th>Confidence</th><th>Evidence</th></tr>
@@ -175,7 +264,7 @@
     </tbody>
   </table>
 
-  <h3>3.1 Storage by environment</h3>
+  <h3>4.1 Storage by environment</h3>
   <table>
     <thead>
       <tr><th>Environment</th><th class="num">Records</th>
@@ -188,7 +277,7 @@
     </tbody>
   </table>
 
-  <h3>3.2 Relative cost (CSS bar — replace with a real chart if desired)</h3>
+  <h3>4.2 Relative cost (CSS bar — replace with a real chart if desired)</h3>
   <!-- Pure-CSS horizontal bars. Width % = value / max. No chart library. -->
   <div class="bar-row"><span>dev</span>
     <span class="bar-track"><span class="bar-fill" style="width:6%"></span></span>
@@ -201,9 +290,9 @@
     <span class="num">[[$X]]</span></div>
 </section>
 
-<!-- ===== 4. COST / IMPACT BREAKDOWN ===== -->
+<!-- ===== 5. COST / IMPACT BREAKDOWN ===== -->
 <section>
-  <h2>4. Cost / impact breakdown</h2>
+  <h2>5. Cost / impact breakdown</h2>
   <table>
     <thead>
       <tr><th>Driver</th><th class="num">Monthly cost</th><th>Notes</th></tr>
@@ -217,9 +306,9 @@
   </table>
 </section>
 
-<!-- ===== 5. RECOMMENDATIONS — actionable, ranked, each with a CONFIDENCE marker ===== -->
+<!-- ===== 6. RECOMMENDATIONS — actionable, ranked, each with a CONFIDENCE marker ===== -->
 <section>
-  <h2>5. Recommendations</h2>
+  <h2>6. Recommendations</h2>
   <!-- Every recommendation carries a confidence marker sourced from the
        AnalysisSpec (findings[].confidence for the RECOMMENDATION-type
        finding it derives from). A recommendation built on a HYPOTHESIS
@@ -248,7 +337,7 @@
      and be read as current. Sources name an OWNER; Limitations and overall
      Confidence come straight from the spec — do not drop them to tidy the page. -->
 <section>
-  <h2>6. Provenance &amp; limitations</h2>
+  <h2>7. Provenance &amp; limitations</h2>
   <div class="provenance">
     <dl>
       <dt>Data as of</dt><dd class="asof">[[YYYY-MM-DD]] — DO NOT DELETE (freshness)</dd>
