@@ -61,6 +61,8 @@ lenses/
 ├── design-patterns.md       # patterns that help vs. hurt (Java/Spring)
 ├── reporting.md             # (output) final shaping stage: narrative + HTML from a validated analysis
 ├── saga.md                  # cross-service consistency without distributed transactions
+├── solid.md                 # responsibility, substitutability & dependency direction of changed code
+├── spring-production-readiness.md # runtime risk: timeouts, idempotency, transactions, concurrency, leaks
 └── testing.md               # test quality: does a test fail for the right reason?
 rules/
 ├── analysis-rigor.md        # report rigor gate: conclusions must be sustained by evidence
@@ -135,7 +137,7 @@ paraphrased or transcribed.
 
 Lenses and skills grow by real need, never speculatively. Planned next, in rough order:
 
-- **Lenses:** `solid`, `event-driven`, `spring-production-readiness`, `observability`, `security`.
+- **Lenses:** `event-driven`, `observability`, `security`.
 - **Review skills:** `architecture-review` consumes the architecture lenses (`ddd`, `saga`, `cqrs`,
   `cdc` today; `event-driven` as it lands).
 - **Construction skills:** `spec-author` and `report` (a data-engineering + data-analysis pipeline
