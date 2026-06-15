@@ -42,6 +42,7 @@ or per pattern.
 
 ```
 lenses/
+├── agent-skills.md          # (meta) Claude Code skill & .claude/ config best practices
 ├── cdc.md                   # capturing & streaming committed datastore changes
 ├── clean-code.md            # readability & maintainability of changed code
 ├── cqrs.md                  # separating read (query) from write (command) models
@@ -57,6 +58,8 @@ templates/
 skills/
 ├── architecture-review/
 │   └── SKILL.md             # review: a Java/Spring design at system altitude
+├── claude-setup-audit/
+│   └── SKILL.md             # (meta) audit & fix a Claude Code .claude/ setup
 ├── java-pr-review/
 │   └── SKILL.md             # review: a Java/Spring PR diff
 └── spec-author/
@@ -110,6 +113,8 @@ Lenses and skills grow by real need, never speculatively. Planned next, in rough
   `cdc` today; `event-driven` as it lands).
 - **Construction skills:** `spec-author` today; `feature-build` (spec → Java/Spring code) and
   `app-bootstrap` (scaffold a service or module) as they land — all reusing the lenses generatively.
+- **Meta/ops skills:** `claude-setup-audit` today (audits & fixes the `.claude/` setup itself against
+  the `agent-skills` lens); `skill-author` (scaffold a new skill correctly) as it lands.
 
 A lens is added only when a real consumer needs it; a skill is added per type of work.
 
