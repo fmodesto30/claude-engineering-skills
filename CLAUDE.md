@@ -44,7 +44,7 @@ Five skills across three tracks. Load a skill's lenses only when the change actu
 
 | Skill | Triggers when | Lenses it uses |
 |---|---|---|
-| [`java-pr-review`](skills/java-pr-review/SKILL.md) | a Java/Spring **diff or PR**, at line/method level | `design-patterns`, `clean-code`, `testing`, `spring-production-readiness` |
+| [`java-pr-review`](skills/java-pr-review/SKILL.md) | a Java/Spring **diff or PR**, at line/method level | `design-patterns`, `clean-code`, `testing`, `spring-production-readiness`, `solid` |
 | [`architecture-review`](skills/architecture-review/SKILL.md) | a Java/Spring **design or sizeable change** at system altitude | `ddd`, `design-patterns`, `saga`, `cqrs`, `cdc`, `spring-production-readiness` |
 
 **Construction** — decide what to build (*generative*):
@@ -61,8 +61,8 @@ Five skills across three tracks. Load a skill's lenses only when the change actu
 | [`claude-setup-audit`](skills/claude-setup-audit/SKILL.md) | auditing/fixing a `.claude/` setup (skill not triggering, resource won't resolve, secret in config) | `agent-skills` |
 
 **Lenses** (`lenses/`, shared knowledge loaded on demand): `design-patterns`, `clean-code`, `testing`,
-`spring-production-readiness`, `ddd`, `saga`, `cqrs`, `cdc`, `data-engineering`, `data-analysis`,
-`reporting`, `agent-skills`.
+`spring-production-readiness`, `solid`, `ddd`, `saga`, `cqrs`, `cdc`, `data-engineering`,
+`data-analysis`, `reporting`, `agent-skills`.
 
 **Rules** (`rules/`, global rubrics a consumer obeys): [`severity-rubric`](rules/severity-rubric.md)
 (`MUST`/`SHOULD`/`NIT`/`NO_COMMENT` — review & audit), `spec-rubric` (`BLOCKER`/`SHOULD`/`NIT`/`OK` —
