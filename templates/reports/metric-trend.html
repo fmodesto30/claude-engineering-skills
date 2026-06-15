@@ -6,12 +6,20 @@
   neutral example content with your real (but non-sensitive) data.
   DELETE all guidance comments (<!-- ... -->) before sharing.
 
+  RENDERS A VALIDATED AnalysisSpec (Status: Validated).
+  A trend over time is meaningless without its freshness and counting
+  caveats. This template MUST surface the provenance (especially the
+  "Data as of" line) and the analysis LIMITATIONS, and must keep any
+  fact / inference / hypothesis tag and confidence the spec carries —
+  do not flatten a tentative trend into an apparent certainty.
+
   USE THIS SHAPE WHEN: you are tracking ONE quantity over time.
   Audience: ops / business. Lead with the HEADLINE NUMBER and the
   TREND (period-over-period delta) — not with method or context.
 
   SECURITY: a report shows RESULTS, not credentials. Never write any
   password, token, connection string, API key, or secret into this file.
+  Credentials are INPUTS ONLY — never output.
 -->
 <html lang="en">
 <head>
@@ -50,6 +58,14 @@
   td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   .muted { color: var(--muted); }
   svg { max-width: 100%; height: auto; }
+  .conf { display: inline-block; font-size: .8rem; font-weight: 700; }
+  .conf-high { color: #2f8f4f; } .conf-medium { color: #8a5a16; } .conf-low { color: #b14242; }
+  .provenance { background: var(--soft); border: 1px solid var(--line); border-left: 4px solid var(--accent);
+                border-radius: 0 6px 6px 0; padding: .75rem 1rem; margin: 1rem 0; font-size: .9rem; }
+  .provenance dl { display: grid; grid-template-columns: max-content 1fr; gap: .3rem 1rem; margin: 0; }
+  .provenance dt { color: var(--muted); font-weight: 700; }
+  .provenance dd { margin: 0; }
+  .provenance .asof { font-weight: 700; color: var(--ink); }
   footer { margin-top: 2.5rem; border-top: 1px solid var(--line); padding-top: .6rem;
            font-size: .82rem; color: var(--muted); }
   @media print { body { margin: 0; max-width: none; } h2 { page-break-after: avoid; } }
@@ -141,6 +157,28 @@
   <p class="muted">Counting rule (e.g. Orders counted at creation, not payment),
      time zone, late-arriving data, and any backfill applied. State how the
      numbers were obtained — never the credentials used.</p>
+</section>
+
+<!-- ===== 6. PROVENANCE & LIMITATIONS — standardized across all four templates =====
+     Sourced from the AnalysisSpec (provenance + limitations + confidence).
+     The "Data as of" (freshness) line is MANDATORY and must NOT be deleted:
+     a trend with no as-of date can silently go stale and be read as current.
+     Sources name an OWNER; Filters state the counting rule; Limitations and
+     Confidence come straight from the spec. -->
+<section>
+  <h2>6. Provenance &amp; limitations</h2>
+  <div class="provenance">
+    <dl>
+      <dt>Data as of</dt><dd class="asof">[[YYYY-MM-DD]] — DO NOT DELETE (freshness)</dd>
+      <dt>Sources</dt><dd>Order datastore metrics, prod (owner: Platform team)</dd>
+      <dt>Filters</dt><dd>Orders counted at creation; prod only; [[time zone]];
+          last 12 months</dd>
+      <dt>Limitations</dt><dd>Latest month may include late-arriving data and is
+          subject to revision; channel split is an estimate where attribution is incomplete</dd>
+      <dt>Confidence</dt><dd><span class="conf conf-high">High</span> for the headline
+          count; <span class="conf conf-medium">Medium</span> for the channel breakdown</dd>
+    </dl>
+  </div>
 </section>
 
 <footer>

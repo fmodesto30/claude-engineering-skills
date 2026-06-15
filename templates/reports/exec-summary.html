@@ -6,6 +6,14 @@
   neutral example content with your real (but non-sensitive) data.
   DELETE all guidance comments (<!-- ... -->) before sharing.
 
+  RENDERS A VALIDATED AnalysisSpec (Status: Validated).
+  This is the most compressed rendering of the spec, which makes it the
+  most dangerous place to flatten. Even on one screen it MUST surface the
+  recommendation's CONFIDENCE and at least one KEY LIMITATION, and it must
+  keep the provenance freshness line. A recommendation rendered as certain
+  when the spec marked it a hypothesis is a misrepresentation — never drop
+  the confidence marker or the limitation to save space.
+
   USE THIS SHAPE WHEN: management / a steering committee needs to make
   a decision. Lead with the RECOMMENDATION / TL;DR. Keep it SHORT —
   one screen. No method appendix, no raw tables. Just conclusion,
@@ -13,6 +21,7 @@
 
   SECURITY: a report shows RESULTS, not credentials. Never write any
   password, token, connection string, API key, or secret into this file.
+  Credentials are INPUTS ONLY — never output.
 -->
 <html lang="en">
 <head>
@@ -40,6 +49,18 @@
   .rec strong { display: block; font-size: .8rem; text-transform: uppercase;
                 letter-spacing: .05em; color: var(--accent); margin-bottom: .25rem; }
   .rec p { margin: 0; font-size: 1.1rem; }
+  /* Confidence marker on the recommendation — required, sourced from the spec. */
+  .conf { display: inline-block; font-size: .8rem; font-weight: 700; margin-top: .5rem; }
+  .conf-high { color: #2f8f4f; } .conf-medium { color: #8a5a16; } .conf-low { color: #b14242; }
+  /* One-line key limitation — mandatory, must survive compression. */
+  .limit { margin-top: .5rem; font-size: .9rem; color: var(--muted); }
+  .limit strong { color: var(--ink); }
+  .provenance { background: var(--soft); border: 1px solid var(--line); border-left: 5px solid var(--accent);
+                border-radius: 0 8px 8px 0; padding: .75rem 1rem; margin: 1rem 0; font-size: .88rem; }
+  .provenance dl { display: grid; grid-template-columns: max-content 1fr; gap: .3rem 1rem; margin: 0; }
+  .provenance dt { color: var(--muted); font-weight: 700; }
+  .provenance dd { margin: 0; }
+  .provenance .asof { font-weight: 700; color: var(--ink); }
   .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
           gap: .75rem; margin: .75rem 0; }
   .kpi { border: 1px solid var(--line); border-radius: 8px; padding: .75rem; text-align: center; }
@@ -71,6 +92,17 @@
     <!-- The conclusion in one or two sentences. State the decision you want. -->
     <p>Proceed with the Invoice automation initiative. It pays back in
        ~[[N]] months and reduces manual Payment handling. Approve [[$X]] for phase 1.</p>
+    <!-- REQUIRED confidence marker, sourced from the AnalysisSpec
+         (findings[].confidence for the recommendation). High / Medium / Low.
+         A recommendation shown without its confidence reads as certain even
+         when the spec marked it a hypothesis — that is a misrepresentation. -->
+    <p class="conf conf-medium">Confidence: Medium</p>
+    <!-- MANDATORY one-line KEY LIMITATION. DO NOT DELETE, even under compression:
+         it is the single caveat the decision-maker must see before approving.
+         Sourced from the spec's limitations / lowest-confidence finding. -->
+    <p class="limit"><strong>Key limitation:</strong> payback assumes the current
+       Shipment integration holds; the ~[[N]]-month figure is a Medium-confidence
+       estimate, not a guaranteed result.</p>
   </div>
 </section>
 
@@ -106,6 +138,26 @@
       <li>Name an executive sponsor.</li>
       <li>Agree the prod cutover window.</li>
     </ul>
+  </div>
+</section>
+
+<!-- ===== 5. PROVENANCE & LIMITATIONS — standardized across all four templates =====
+     Sourced from the AnalysisSpec (provenance + limitations + confidence).
+     The "Data as of" (freshness) line is MANDATORY and must NOT be deleted,
+     even under compression: an exec figure with no as-of date can silently go
+     stale and be read as current. Sources name an OWNER. -->
+<section>
+  <h2>Provenance &amp; limitations</h2>
+  <div class="provenance">
+    <dl>
+      <dt>Data as of</dt><dd class="asof">[[YYYY-MM-DD]] — DO NOT DELETE (freshness)</dd>
+      <dt>Sources</dt><dd>Invoice automation business case (owner: Finance);
+          Payment volume baseline (owner: Platform team)</dd>
+      <dt>Filters</dt><dd>prod only; phase-1 scope; excludes Notification redesign</dd>
+      <dt>Limitations</dt><dd>Payback depends on the current Shipment integration;
+          accuracy target 99.5% is a goal, not yet measured</dd>
+      <dt>Confidence</dt><dd><span class="conf conf-medium">Medium overall</span></dd>
+    </dl>
   </div>
 </section>
 

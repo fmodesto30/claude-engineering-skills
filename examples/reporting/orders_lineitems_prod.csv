@@ -1,0 +1,18 @@
+# Request: Total Order revenue and Order count for prod.
+# Context: This is at LINE-ITEM grain: each Order appears once per line item, so order_id repeats
+#   (fan-out). There are 5 distinct orders (O1..O5) across 13 rows. Summing line_amount over rows
+#   triple-counts at the order level. Row 13 (P3DUP) is a duplicated payment row for P3.
+order_id,line_item_id,line_amount_cents,payment_id
+O1,L1,3000,P1
+O1,L2,2000,P1
+O2,L3,5000,P2
+O2,L4,1500,P2
+O2,L5,1500,P2
+O3,L6,4000,P3
+O3,L7,4000,P3
+O4,L8,2500,P4
+O4,L9,2500,P4
+O4,L10,2500,P4
+O5,L11,6000,P5
+O5,L12,1000,P5
+P3DUP,L6,4000,P3

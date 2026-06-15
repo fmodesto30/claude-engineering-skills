@@ -46,12 +46,15 @@ lenses/
 ├── cdc.md                   # capturing & streaming committed datastore changes
 ├── clean-code.md            # readability & maintainability of changed code
 ├── cqrs.md                  # separating read (query) from write (command) models
+├── data-analysis.md         # analytical reasoning: question, method, evidence, confidence
+├── data-engineering.md      # data quality, lineage, grain; blocks unsound conclusions
 ├── ddd.md                   # domain modeling: boundaries, aggregates, consistency
 ├── design-patterns.md       # patterns that help vs. hurt (Java/Spring)
-├── reporting.md             # (output) choosing a report's shape by purpose & audience
+├── reporting.md             # (output) final shaping stage: narrative + HTML from a validated analysis
 ├── saga.md                  # cross-service consistency without distributed transactions
 └── testing.md               # test quality: does a test fail for the right reason?
 rules/
+├── analysis-rigor.md        # report rigor gate: conclusions must be sustained by evidence
 ├── severity-rubric.md       # global review rubric (MUST/SHOULD/NIT/NO_COMMENT)
 └── spec-rubric.md           # global spec-quality rubric (BLOCKER/SHOULD/NIT/OK)
 templates/
@@ -60,6 +63,7 @@ templates/
 │   ├── metric-trend.html    #   a quantity over time
 │   ├── discovery-stories.html #  docs -> epics/stories/trilha
 │   └── exec-summary.html    #   decision-first summary for management
+├── analysis-spec.md         # intermediate analytical contract (the HTML derives from it)
 └── spec.md                  # prescriptive engineering-spec format
 skills/
 ├── architecture-review/
@@ -69,9 +73,11 @@ skills/
 ├── java-pr-review/
 │   └── SKILL.md             # review: a Java/Spring PR diff
 ├── report/
-│   └── SKILL.md             # construction: HTML report, shape chosen per situation
+│   └── SKILL.md             # construction: understand -> validate data -> analyze -> HTML report
 └── spec-author/
     └── SKILL.md             # construction: write a prescriptive spec for a change
+examples/
+└── reporting/               # behavioral-eval fixtures for report + EXPECTED.md
 scripts/
 └── sanitization-check.sh    # deterministic sanitization gate (CI + pre-commit hook)
 .github/workflows/
@@ -119,9 +125,10 @@ Lenses and skills grow by real need, never speculatively. Planned next, in rough
 - **Lenses:** `solid`, `event-driven`, `spring-production-readiness`, `observability`, `security`.
 - **Review skills:** `architecture-review` consumes the architecture lenses (`ddd`, `saga`, `cqrs`,
   `cdc` today; `event-driven` as it lands).
-- **Construction skills:** `spec-author` and `report` (HTML report whose shape is chosen per
-  situation) today; `feature-build` (spec → Java/Spring code) and `app-bootstrap` (scaffold a
-  service or module) as they land — all reusing the lenses generatively.
+- **Construction skills:** `spec-author` and `report` (a data-engineering + data-analysis pipeline
+  that validates the data, runs the analysis, and only then renders an HTML report whose conclusions
+  are sustained by evidence) today; `feature-build` (spec → Java/Spring code) and `app-bootstrap`
+  (scaffold a service or module) as they land — all reusing the lenses generatively.
 - **Meta/ops skills:** `claude-setup-audit` today (audits & fixes the `.claude/` setup itself against
   the `agent-skills` lens); `skill-author` (scaffold a new skill correctly) as it lands.
 

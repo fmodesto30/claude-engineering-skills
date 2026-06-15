@@ -1,0 +1,10 @@
+# Request: Did Order volume drop this month (prod, December)?
+# Context: December is a PARTIAL month: only the first 10 days are loaded (the extract ran on
+#   2025-12-10). The 2025-10 revenue cell is null. The hom environment is missing entirely for the
+#   last 3 months. Source ordering_metrics; freshness 2025-12-10.
+month,env,order_count,revenue_cents
+2025-08,prod,1350,6750000
+2025-09,prod,1420,7100000
+2025-10,prod,1490,
+2025-11,prod,1560,7800000
+2025-12,prod,540,2700000
