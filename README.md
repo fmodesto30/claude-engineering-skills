@@ -61,6 +61,8 @@ lenses/
 ├── design-patterns.md       # patterns that help vs. hurt (Java/Spring)
 ├── reporting.md             # (output) final shaping stage: narrative + HTML from a validated analysis
 ├── saga.md                  # cross-service consistency without distributed transactions
+├── solid.md                 # responsibility, substitutability & dependency direction of changed code
+├── spring-production-readiness.md # runtime risk: timeouts, idempotency, transactions, concurrency, leaks
 └── testing.md               # test quality: does a test fail for the right reason?
 rules/
 ├── analysis-rigor.md        # report rigor gate: conclusions must be sustained by evidence
@@ -83,6 +85,8 @@ skills/
 │   └── SKILL.md             # review: a Java/Spring PR diff
 ├── report/
 │   └── SKILL.md             # construction: understand -> validate data -> analyze -> HTML report
+├── retrospective/
+│   └── SKILL.md             # (meta) turn a lesson / repeated mistake into a durable config change
 └── spec-author/
     └── SKILL.md             # construction: write a prescriptive spec for a change
 examples/
@@ -135,15 +139,17 @@ paraphrased or transcribed.
 
 Lenses and skills grow by real need, never speculatively. Planned next, in rough order:
 
-- **Lenses:** `solid`, `event-driven`, `spring-production-readiness`, `observability`, `security`.
+- **Lenses:** `event-driven`, `observability`, `security`.
 - **Review skills:** `architecture-review` consumes the architecture lenses (`ddd`, `saga`, `cqrs`,
   `cdc` today; `event-driven` as it lands).
 - **Construction skills:** `spec-author` and `report` (a data-engineering + data-analysis pipeline
   that validates the data, runs the analysis, and only then renders an HTML report whose conclusions
   are sustained by evidence) today; `feature-build` (spec → Java/Spring code) and `app-bootstrap`
   (scaffold a service or module) as they land — all reusing the lenses generatively.
-- **Meta/ops skills:** `claude-setup-audit` today (audits & fixes the `.claude/` setup itself against
-  the `agent-skills` lens); `skill-author` (scaffold a new skill correctly) as it lands.
+- **Meta/ops skills:** `claude-setup-audit` (audits & fixes the `.claude/` setup against the
+  `agent-skills` lens) and `retrospective` (turns a lesson or a repeated mistake into a durable config
+  change — hook / rule / CLAUDE.md / memory — so it does not recur) today; `skill-author` (scaffold a
+  new skill correctly) as it lands.
 
 A lens is added only when a real consumer needs it; a skill is added per type of work.
 

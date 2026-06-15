@@ -82,10 +82,16 @@ defers line-by-line concerns to `java-pr-review`.
      pipeline is warranted at all (an intentional domain event often suffices when you own the
      source), whether the capture point is a raw table or an intentional outbox, and whether deletes,
      ordering, idempotency, and lag are handled.
+   - [`../../lenses/spring-production-readiness.md`](../../lenses/spring-production-readiness.md) —
+     when the change affects how the system behaves under failure, retry, concurrency, or load at a
+     boundary: timeouts/retries/fallback and failure isolation across an integration point,
+     idempotency under at-least-once delivery, a hotspot / single writer / N+1 fan-out that won't hold
+     under load, or a consistency seam assumed atomic across services. Use it at **system altitude** to
+     judge whether the design's failure modes are handled — not the line-level call (that is
+     `java-pr-review`).
    - [`../../rules/severity-rubric.md`](../../rules/severity-rubric.md) — always; classify every
      finding `MUST` / `SHOULD` / `NIT` / `NO_COMMENT`.
-   - *(More shared lenses — event-driven, spring-production-readiness — are added
-     here as they land in `lenses/`.)*
+   - *(One more shared lens — event-driven — is added here as it lands in `lenses/`.)*
 5. **Prioritize architecture-level concerns** the line reviewer cannot judge:
    - **Context boundaries & coupling** — does the change respect bounded-context boundaries, or does
      it couple contexts that should evolve independently (shared mutable model, a context reaching
