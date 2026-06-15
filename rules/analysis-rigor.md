@@ -100,9 +100,11 @@ gate enforces — a filled `AnalysisSpec` or its report that trips any of these 
    report must never be committed. This standing rule is inherited from the reporting lens and the
    contract.
 11. **Never render a report before the contract is validated.** Rendering any report while the
-   `AnalysisSpec` Status is absent, Draft, or In Review — rather than Validated with a recorded ready /
-   ready-with-SHOULDs verdict — is a **BLOCKER.** The render step must be refusable from the artifact
-   (the Status field), not trusted to the actor.
+   `AnalysisSpec` Status is anything other than `Validated` (absent, `Draft`, `In Review`, or
+   `Blocked`) is a **BLOCKER.** `Validated` is reserved for a contract that passed with a `ready` /
+   `ready-with-SHOULDs` verdict; a `not-ready` or `BLOCKED-by-data-quality` verdict sets Status
+   `Blocked`, never `Validated`, so Status alone is a trustworthy render gate. The render step must
+   be refusable from the artifact (the Status field), not trusted to the actor.
 
 ## Calibration examples (neutral domain)
 

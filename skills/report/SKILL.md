@@ -112,10 +112,13 @@ HTML) cannot begin until step 4 (the AnalysisSpec) is filled and passes.
    evidence cannot carry becomes a LIMITED finding, an open question, or is dropped). **This is a hard
    gate: no HTML is produced until the AnalysisSpec is filled and passes the rigor rule.** The HTML
    must be derivable from this contract and must not be producible without it. Record the outcome in
-   the AnalysisSpec **`Status`** (set it to `Validated` only when no `BLOCKER` remains) and its
-   `Rigor verdict`; steps 5-6 MUST NOT run while `Status` is absent, `Draft`, or `In Review` —
-   rendering before `Status: Validated` is itself a `BLOCKER` (analysis-rigor rule 11), so the gate
-   is checkable from the artifact rather than merely trusted to the actor.
+   the AnalysisSpec **`Status`** and its `Rigor verdict`: set `Status: Validated` ONLY when the verdict
+   is `ready` / `ready-with-SHOULDs` and no `BLOCKER` remains; if a `BLOCKER` remains or the verdict is
+   `not-ready` / `BLOCKED-by-data-quality`, set `Status: Blocked` and produce a LIMITED or
+   data-quality output (conclusions downgraded, limitations foregrounded), never a confident report.
+   Steps 5-6 MUST NOT run unless `Status` is `Validated` — rendering on any other status is itself a
+   `BLOCKER` (analysis-rigor rule 11), so the gate is checkable from the artifact rather than trusted
+   to the actor.
 
 5. **REPORTING — choose the narrative and the shape**, via
    [`../../lenses/reporting.md`](../../lenses/reporting.md), *from* the validated AnalysisSpec. Use the

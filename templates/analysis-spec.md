@@ -35,16 +35,22 @@ the data was obtained (the query, the source, the window) — never the keys use
 <!--
 Load-bearing and checkable from the artifact itself — a reader (or the report skill) must be able to
 read these two lines and know whether rendering is permitted, without trusting the actor's word.
-- Status is the assembly state: "Validated" means the filled contract passed
-  ../rules/analysis-rigor.md, not merely that the fields are populated.
+- Status is the assembly state and the SINGLE render-gate signal:
+  - `Validated` — the filled contract passed ../rules/analysis-rigor.md with a `ready` or
+    `ready-with-SHOULDs` verdict; rendering is permitted. `Validated` is RESERVED for this case.
+  - `Blocked` — a BLOCKER remains, or the verdict is `not-ready` or `BLOCKED-by-data-quality`;
+    rendering a confident report is forbidden. The honest output is a LIMITED or data-quality
+    report (conclusions downgraded, limitations foregrounded), never a polished claim the data
+    cannot carry. Never mark a blocked analysis `Validated`.
+  - `Draft` / `In Review` — not yet gated; rendering is forbidden.
 - Rigor verdict is the verdict that rule returns: ready / ready-with-SHOULDs / not-ready /
-  BLOCKED-by-data-quality (see ../rules/analysis-rigor.md "Verdict").
-HARD GATE: the HTML report MUST NOT be rendered until Status is Validated AND the rigor verdict is
-ready or ready-with-SHOULDs. A not-ready or BLOCKED-by-data-quality verdict, or any non-Validated
-status, forbids rendering — the gate is read from these lines, not assumed.
+  BLOCKED-by-data-quality (see ../rules/analysis-rigor.md "Verdict"). `Validated` requires a
+  `ready` / `ready-with-SHOULDs` verdict; Status and verdict must agree.
+HARD GATE: the HTML report MUST NOT be rendered unless Status is `Validated` — that single line is
+the gate, read from the artifact, not assumed.
 -->
 
-- Status: Draft | In Review | Validated
+- Status: Draft | In Review | Validated | Blocked
 - Rigor verdict: ready | ready-with-SHOULDs | not-ready | BLOCKED-by-data-quality <!-- per ../rules/analysis-rigor.md -->
 
 ## Metadata
