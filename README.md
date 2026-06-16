@@ -96,6 +96,8 @@ scripts/
 .github/workflows/
 └── sanitization.yml         # CI: sanitization gate + gitleaks
 LICENSE                      # CC BY 4.0
+VERSION                      # current release (semver), machine-readable
+CHANGELOG.md                 # what changed per release — the "new patch" signal
 ```
 
 Skills (by type of work) and lenses (by subject) are added the same way as the repo grows —
@@ -152,6 +154,14 @@ Lenses and skills grow by real need, never speculatively. Planned next, in rough
   new skill correctly) as it lands.
 
 A lens is added only when a real consumer needs it; a skill is added per type of work.
+
+## Versioning & patches
+
+Releases are versioned ([`VERSION`](VERSION)), recorded in [CHANGELOG.md](CHANGELOG.md), and tagged in
+git (`vX.Y.Z`). A newer tag than the one a CLI last absorbed is the signal that **a new patch is
+available**: tell it *"saiu o novo patch"* (or "learn what changed") and it reads only the changelog
+delta and updates what it knows — instead of re-reading the whole repo. See the patch update path in
+[CLAUDE.md](CLAUDE.md#staying-current--patches).
 
 ## License
 
