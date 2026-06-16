@@ -74,6 +74,10 @@ templates/
 │   ├── metric-trend.html    #   a quantity over time
 │   ├── discovery-stories.html #  docs -> epics/stories/trilha
 │   └── exec-summary.html    #   decision-first summary for management
+├── themes/                  # neutral CSS-variable theme presets (skins) — no brand
+│   ├── theme-slate.css      #   light
+│   └── theme-dark.css       #   dark
+├── THEMING.md               # the theme-variable contract + how to add a theme
 ├── analysis-spec.md         # intermediate analytical contract (the HTML derives from it)
 └── spec.md                  # prescriptive engineering-spec format
 skills/

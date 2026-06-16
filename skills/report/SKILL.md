@@ -139,6 +139,10 @@ HTML) cannot begin until step 4 (the AnalysisSpec) is filled and passes.
    Every chart must state which question it answers and must not distort scale, proportion, or trend;
    when no honest chart helps, a plain values table is the right choice. This stage runs *after* the
    analysis, never first — it shapes a conclusion that already stands, it does not manufacture one.
+   Also select a **theme preset** (the visual skin) appropriate to the audience/purpose — **suggest** it
+   and let the user confirm or change it — without letting it alter the shape or chart type chosen here;
+   apply it via the theme-variable surface ([`../../templates/THEMING.md`](../../templates/THEMING.md)).
+   The theme is the only cosmetic choice offered to the user; the chart type and the shape follow the data.
 
 6. **Render the self-contained HTML** to the target reports directory the caller specified (or the
    project's conventional reports location). The visuals are inline and offline — no external

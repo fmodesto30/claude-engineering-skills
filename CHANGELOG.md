@@ -10,6 +10,24 @@ that **a new patch is available**.
 > entries name — rather than re-reading the whole repo. See the *patch update path* in
 > [`CLAUDE.md`](CLAUDE.md#staying-current--patches).
 
+## [0.3.0] — 2026-06-16
+
+### Added
+- **Theming for report templates** — the report templates are themeable via a documented CSS-variable
+  surface, and a theme is a **render-time preset suggested by purpose** and confirmed by the user. The
+  capability is taught where an agent learns it (the lens and the skill), with a concrete contract and
+  neutral examples; a real brand's palette/logo belongs in the consuming environment, never here.
+  - `templates/THEMING.md` — the theme-variable contract, the optional logo slot, how inline-SVG chart
+    colours must read the theme variables (`style="fill:var(--x)"` / a class, since SVG `fill`/`stroke`
+    presentation attributes do not accept `var()`), and how to add a theme.
+  - `templates/themes/theme-slate.css` and `theme-dark.css` — two neutral example themes (no brand).
+  - `lenses/reporting.md` — a "Theming & brand identity" section (a theme is the user's/organisation's
+    skin, orthogonal to shape and chart type; legitimate only when subordinate to the data; suggested by
+    purpose, confirmed by the user; the chart type and the shape are never a cosmetic menu) plus a
+    "Theme overriding substance" anti-pattern.
+  - `skills/report/SKILL.md` — the render step now selects and suggests a theme preset by
+    audience/purpose, without altering the data-driven shape or chart type.
+
 ## [0.2.0] — 2026-06-16
 
 ### Added

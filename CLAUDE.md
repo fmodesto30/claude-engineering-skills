@@ -74,6 +74,11 @@ Five skills across three tracks. Load a skill's lenses only when the change actu
 (`MUST`/`SHOULD`/`NIT`/`NO_COMMENT` — review & audit), `spec-rubric` (`BLOCKER`/`SHOULD`/`NIT`/`OK` —
 specs), `analysis-rigor` (the report's evidence gate).
 
+**Theming:** report templates are themeable via a documented CSS-variable surface
+([`templates/THEMING.md`](templates/THEMING.md)) with neutral presets in `templates/themes/`. A theme is
+a render-time **preset suggested by purpose** and confirmed by the user — never a chart/shape menu
+(those follow the data).
+
 > See [README.md](README.md#structure) for the full file tree (templates, examples, scripts). When the
 > repo grows, update this map so it stays the single, cheap-to-read index of the repo's capabilities.
 

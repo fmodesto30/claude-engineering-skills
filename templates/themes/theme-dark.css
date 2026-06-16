@@ -1,0 +1,19 @@
+/* theme-dark — neutral dark theme (example). Override the report's :root with these,
+   or apply via [data-theme="dark"]. Neutral by design — no brand. See ../THEMING.md.
+   Text stays legible on the dark --bg; charts read --brand so they re-skin too. */
+:root,
+[data-theme="dark"] {
+  --bg:         #161a22;
+  --ink:        #e9edf3;
+  --muted:      #9aa6b4;
+  --line:       rgba(255,255,255,.10);
+  --soft:       #1e242e;
+  --accent:     #6fb1e6;
+  --brand:      #6fb1e6;
+  --brand-text: #a9d0f2;
+  --bar:        #5a86b8;
+  --up:         #7fd6a0;
+  --down:       #e88a8a;
+  --logo-bg:    #6fb1e6;
+  --logo-text:  #0e1420;
+}
