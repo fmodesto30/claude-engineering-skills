@@ -61,6 +61,8 @@ lenses/
 ├── design-patterns.md       # patterns that help vs. hurt (Java/Spring)
 ├── reporting.md             # (output) final shaping stage: narrative + HTML from a validated analysis
 ├── saga.md                  # cross-service consistency without distributed transactions
+├── solid.md                 # responsibility, substitutability & dependency direction of changed code
+├── spring-production-readiness.md # runtime risk: timeouts, idempotency, transactions, concurrency, leaks
 └── testing.md               # test quality: does a test fail for the right reason?
 rules/
 ├── analysis-rigor.md        # report rigor gate: conclusions must be sustained by evidence
@@ -83,6 +85,8 @@ skills/
 │   └── SKILL.md             # review: a Java/Spring PR diff
 ├── report/
 │   └── SKILL.md             # construction: understand -> validate data -> analyze -> HTML report
+├── retrospective/
+│   └── SKILL.md             # (meta) turn a lesson / repeated mistake into a durable config change
 └── spec-author/
     └── SKILL.md             # construction: write a prescriptive spec for a change
 examples/
@@ -92,6 +96,8 @@ scripts/
 .github/workflows/
 └── sanitization.yml         # CI: sanitization gate + gitleaks
 LICENSE                      # CC BY 4.0
+VERSION                      # current release (semver), machine-readable
+CHANGELOG.md                 # what changed per release — the "new patch" signal
 ```
 
 Skills (by type of work) and lenses (by subject) are added the same way as the repo grows —
@@ -135,17 +141,27 @@ paraphrased or transcribed.
 
 Lenses and skills grow by real need, never speculatively. Planned next, in rough order:
 
-- **Lenses:** `solid`, `event-driven`, `spring-production-readiness`, `observability`, `security`.
+- **Lenses:** `event-driven`, `observability`, `security`.
 - **Review skills:** `architecture-review` consumes the architecture lenses (`ddd`, `saga`, `cqrs`,
   `cdc` today; `event-driven` as it lands).
 - **Construction skills:** `spec-author` and `report` (a data-engineering + data-analysis pipeline
   that validates the data, runs the analysis, and only then renders an HTML report whose conclusions
   are sustained by evidence) today; `feature-build` (spec → Java/Spring code) and `app-bootstrap`
   (scaffold a service or module) as they land — all reusing the lenses generatively.
-- **Meta/ops skills:** `claude-setup-audit` today (audits & fixes the `.claude/` setup itself against
-  the `agent-skills` lens); `skill-author` (scaffold a new skill correctly) as it lands.
+- **Meta/ops skills:** `claude-setup-audit` (audits & fixes the `.claude/` setup against the
+  `agent-skills` lens) and `retrospective` (turns a lesson or a repeated mistake into a durable config
+  change — hook / rule / CLAUDE.md / memory — so it does not recur) today; `skill-author` (scaffold a
+  new skill correctly) as it lands.
 
 A lens is added only when a real consumer needs it; a skill is added per type of work.
+
+## Versioning & patches
+
+Releases are versioned ([`VERSION`](VERSION)), recorded in [CHANGELOG.md](CHANGELOG.md), and tagged in
+git (`vX.Y.Z`). A newer tag than the one a CLI last absorbed is the signal that **a new patch is
+available**: tell it *"saiu o novo patch"* (or "learn what changed") and it reads only the changelog
+delta and updates what it knows — instead of re-reading the whole repo. See the patch update path in
+[CLAUDE.md](CLAUDE.md#staying-current--patches).
 
 ## License
 

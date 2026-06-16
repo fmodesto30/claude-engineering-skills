@@ -6,17 +6,27 @@
 > [Learn protocol](#learn-protocol) below, in full.**
 > Answer in the user's language.
 
+**Version:** see [`VERSION`](VERSION) · what changed per release: [`CHANGELOG.md`](CHANGELOG.md) · each
+release is a git tag (`vX.Y.Z`). If you've absorbed an earlier version, use the
+[patch update path](#staying-current--patches) — read only the delta, not the whole repo.
+
 ## What this repository is
 
-A small, sanitized library of **software-engineering review skills** for Claude Code.
-It encodes review *judgment* — not new tools — so an agent applies the same calibrated,
-consequence-driven engineering standard to every diff. First focus: **Java / Spring Boot
-PR review**. It is built to be **dropped into any Claude CLI and adopted durably**.
+A small, sanitized library of **software-engineering skills** for Claude Code. It encodes
+engineering *judgment* — not new tools — so an agent applies the same calibrated,
+consequence-driven standard whether it is **reviewing** code and designs (`java-pr-review`,
+`architecture-review`), **constructing** specs and reports (`spec-author`, `report`), or
+**auditing and improving** a Claude setup (`claude-setup-audit`, `retrospective`). First focus:
+**Java / Spring Boot**. It is
+built to be **dropped into any Claude CLI and adopted durably**.
 
-Two building blocks (see [README.md](README.md) for the full model):
+The building blocks (see [README.md](README.md#architecture-model) for the full model):
 
 - **Skill** = a mode of work (`skills/<name>/SKILL.md`), auto-discovered via its frontmatter.
 - **Lens** = reusable specialized knowledge (`lenses/<topic>.md`), loaded by a skill on demand.
+- **Rule** = a global rubric (`rules/<name>.md`) every skill obeys (e.g. the severity rubric).
+- **Template** = an output format (`templates/…`).
+- **Hook** = deterministic enforcement (`scripts/sanitization-check.sh`, run in CI and pre-commit).
 
 ## Philosophy (the stance to absorb)
 
@@ -33,20 +43,39 @@ Two building blocks (see [README.md](README.md) for the full model):
 
 ## Structure map
 
-| Skill | Triggers when | Uses lenses | Output |
-|---|---|---|---|
-| [`java-pr-review`](skills/java-pr-review/SKILL.md) | reviewing a Java/Spring diff or PR, or self-checking a change before review | [`design-patterns`](lenses/design-patterns.md) | severity-tagged findings (`file:line` → problem → consequence → suggestion) + verdict |
+Five skills across three tracks. Load a skill's lenses only when the change actually touches that area.
 
-**Lenses** (shared knowledge, loaded only when the diff touches that area):
-- [`lenses/design-patterns.md`](lenses/design-patterns.md) — when a design pattern helps vs.
-  hurts in Java/Spring, with modern idioms that replace the classic forms.
+**Review** — judge code/design that already exists (*evaluative*):
 
-**Rubric** (the severity vocabulary every review uses):
-- [`skills/java-pr-review/references/severity-rubric.md`](skills/java-pr-review/references/severity-rubric.md)
-  — `MUST` / `SHOULD` / `NIT` / `NO_COMMENT` and the overriding "name a concrete consequence" rule.
+| Skill | Triggers when | Lenses it uses |
+|---|---|---|
+| [`java-pr-review`](skills/java-pr-review/SKILL.md) | a Java/Spring **diff or PR**, at line/method level | `design-patterns`, `clean-code`, `testing`, `spring-production-readiness`, `solid` |
+| [`architecture-review`](skills/architecture-review/SKILL.md) | a Java/Spring **design or sizeable change** at system altitude | `ddd`, `design-patterns`, `saga`, `cqrs`, `cdc`, `spring-production-readiness` |
 
-> As the repo grows, add a row per skill and a bullet per lens here so this map stays the
-> single, cheap-to-read index of the repository's capabilities.
+**Construction** — decide what to build (*generative*):
+
+| Skill | Triggers when | Lenses / templates it uses |
+|---|---|---|
+| [`spec-author`](skills/spec-author/SKILL.md) | writing/refining a **spec** before building | the lenses above, read generatively, + `spec-rubric` + `templates/spec.md` |
+| [`report`](skills/report/SKILL.md) | turning data/docs into an **HTML report** (general-purpose, not JVM-only) | `data-engineering`, `data-analysis`, `reporting` + `analysis-rigor` + `templates/` |
+
+**Meta/ops:**
+
+| Skill | Triggers when | Lens it uses |
+|---|---|---|
+| [`claude-setup-audit`](skills/claude-setup-audit/SKILL.md) | auditing/fixing a `.claude/` setup (skill not triggering, resource won't resolve, secret in config) | `agent-skills` |
+| [`retrospective`](skills/retrospective/SKILL.md) | after a task or a **repeated error** — "save this lesson", "don't repeat this", "configure so this can't happen again", "what did we learn" | `agent-skills` |
+
+**Lenses** (`lenses/`, shared knowledge loaded on demand): `design-patterns`, `clean-code`, `testing`,
+`spring-production-readiness`, `solid`, `ddd`, `saga`, `cqrs`, `cdc`, `data-engineering`,
+`data-analysis`, `reporting`, `agent-skills`.
+
+**Rules** (`rules/`, global rubrics a consumer obeys): [`severity-rubric`](rules/severity-rubric.md)
+(`MUST`/`SHOULD`/`NIT`/`NO_COMMENT` — review & audit), `spec-rubric` (`BLOCKER`/`SHOULD`/`NIT`/`OK` —
+specs), `analysis-rigor` (the report's evidence gate).
+
+> See [README.md](README.md#structure) for the full file tree (templates, examples, scripts). When the
+> repo grows, update this map so it stays the single, cheap-to-read index of the repo's capabilities.
 
 ## Learn protocol
 
@@ -63,9 +92,11 @@ Run this when the user asks you to learn from / adopt this repository. The goal 
    judgment/content, and it is the part worth absorbing deeply.
 4. Build the map: for each skill, *when it triggers → which lenses it pulls → what severity
    vocabulary it emits*.
-5. Report back a concise summary **in the user's words**: what this repo is, its review
-   philosophy, the skills and lenses, and when each applies — so the user can confirm you
-   absorbed it. Do not pad; demonstrate understanding, not coverage.
+5. Report back a **concise** summary **in the user's words** — at most ~12 bullets / one screen:
+   what this repo is, its philosophy, the skills and lenses, and when each applies — so the user can
+   confirm you absorbed it. Demonstrate understanding, not coverage. **Do not** turn this into a
+   critique, audit, scorecard, gap-analysis, or list of questions about the repo — learning is not
+   reviewing. If the user later asks for an assessment, give it then; otherwise proceed to Phase 2.
 
 ### Phase 2 — Propose durable adoption (ask before writing anything outside this repo)
 
@@ -87,11 +118,11 @@ For **Option A**, install at **user scope** (so it works across all the team's r
 this one). Determine the CLI's user skills directory (typically `~/.claude/skills/`; ask if
 unsure). Then, for each skill:
 
-1. Create `<skills-dir>/<skill-name>/` and copy its `SKILL.md` and `references/` into it.
-2. **Inline the lenses** it references: copy each `lenses/<x>.md` this skill declares into the
-   new skill's `references/` (or a `lenses/` subfolder) and rewrite the `../../lenses/<x>.md`
-   link in the copied `SKILL.md` to point at the local copy — so the installed skill is
-   self-contained and does not depend on this repo's layout.
+1. Create `<skills-dir>/<skill-name>/` and copy its `SKILL.md` (and any `references/` it has) into it.
+2. **Inline everything the skill references** so the installed copy is self-contained and does not
+   depend on this repo's layout: for each `../../lenses/<x>.md`, `../../rules/<x>.md`, and
+   `../../templates/<x>` the `SKILL.md` links, copy that file into a local subfolder of the new skill
+   and rewrite the link to the local copy. (This is the packaging step the README describes.)
 3. Optionally add a one-line pointer to the environment's `CLAUDE.md` (e.g. "For Java/Spring
    review, use the `java-pr-review` skill and obey its severity rubric").
 
@@ -107,12 +138,36 @@ Report exactly which files you created. Make minimal changes and stop if anythin
   not paste real corporate identifiers, service names, or business rules into it.
 - **The target project wins on conflicts.** Where this repo's defaults disagree with the team's
   existing conventions or stack, follow the team — and, in Option B, encode that.
+- **Learn, don't critique.** Your task is to understand this repo and propose adoption, then stop. Do
+  not generate an unsolicited audit, scorecard, or backlog of questions/improvements about the repo.
+  Offer deeper analysis only if the user explicitly asks — and keep it bounded when they do.
+
+## Staying current — patches
+
+This repository is **versioned**: the current version is in [`VERSION`](VERSION), what changed in each
+release is in [`CHANGELOG.md`](CHANGELOG.md), and every release is a git tag (`vX.Y.Z`). **A newer tag
+/ `VERSION` than the one you last absorbed is the signal that a new patch is available.**
+
+When the user says a new patch is out — **"saiu o novo patch"**, "atualizou o repo", "learn what
+changed", "pull the latest" — run the **update path**, not a full re-learn:
+
+1. `git pull` (and `git fetch --tags`); read [`VERSION`](VERSION) / the newest tag.
+2. If it is newer than the version you last absorbed, read **only** the [`CHANGELOG.md`](CHANGELOG.md)
+   entries since that version, and open just the lenses/skills those entries name — **not** the whole
+   repo.
+3. Update your durable memory/config for only those changes, and **record the new version** as the one
+   you have absorbed (e.g. a memory note: "absorbed claude-engineering-skills @ vX.Y.Z").
+
+Run the full [Learn protocol](#learn-protocol) only on first contact, or when you have no recorded
+version to diff from.
 
 ## Adding to this repo (for maintainers)
 
 - New **skills** go under `skills/<name>/SKILL.md` (one per *type of work*, never per pattern);
   new **lenses** under `lenses/<topic>.md` (one per subject, shared across skills).
 - Update the [Structure map](#structure-map) above with the new skill/lens.
+- For a user-visible change, add a [`CHANGELOG.md`](CHANGELOG.md) entry, bump [`VERSION`](VERSION), and
+  tag the merge (`vX.Y.Z`) — that is what lets a CLI absorb the patch as a delta, not a full re-learn.
 - Every finding a skill emits must name a concrete consequence; if it can't, it's `NIT` or
   `NO_COMMENT`. Keep architecture rules separate from style preferences. No copyrighted or
   corporate material — synthetic, neutral examples only.

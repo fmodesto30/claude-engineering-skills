@@ -62,6 +62,7 @@ Before raising or accepting a setup decision, the reviewer should be able to ans
 - Is there any secret in a committed file? Is `settings.local.json` gitignored?
 - Which files must be committed for a teammate (or a rebuilt container) to get the same behavior, and are they?
 - What Claude Code version is this, and do the version-dependent features this setup relies on exist in it?
+- Does the setup tell the agent that a *provisioned* credential is authorized for use — so it does not re-litigate or refuse it every session — and is credential expiry self-recovered (refresh + retry) rather than a manual reminder loop?
 
 ## Heuristics
 
@@ -135,6 +136,20 @@ Before raising or accepting a setup decision, the reviewer should be able to ans
 
 **Example finding:** "MUST: `.claude/settings.json` contains `\"API_TOKEN\": \"<literal-token-value>\"` and is committed, so the token leaks to everyone with repo access and to history. Remove it, read the token from an environment variable at run time, and rotate the exposed value. Keep machine-specific overrides in `settings.local.json`, which must be gitignored."
 
+### Authorized Credentials — Use vs. Leak
+
+**What to look for:** Whether the setup tells the agent that a credential it is *provisioned with* — a token, an SSO session, an API key in the environment, a Git credential in a cloned repo's config — is **authorized for use**, and whether expiry is handled. The tell of a gap: nothing in `CLAUDE.md` (or a rule/skill) states the credential is pre-approved for the operations it exists for, so the agent treats every use as a secret-handling risk — re-asking permission, hesitating, or refusing — and nothing tells it what to do when the credential expires, so it stalls and waits for the operator.
+
+**Why it matters:** "Keep secrets out of committed files" (above) is about not *leaking* a secret; it is **not** a reason to *refuse to use* a credential the agent is meant to act with. An agent that conflates the two **mis-applies caution**: it stalls on authorized work, re-litigates the same approval every session, and trains the operator to babysit it — and an expired credential becomes a manual reminder loop instead of a self-recovered condition. Using the provisioned credential is the expected behavior; the protection is *redaction and non-persistence*, not refusal.
+
+**When NOT to comment:** When the setup already pre-authorizes the credential and handles expiry, do not pile on. And do not weaken the real guardrail: a credential that is *out of scope*, *someone else's*, or being *sent somewhere it should not go* should still not be used, and a genuine secret hardcoded in a committed file is still a `MUST` to remove (above). The point is to distinguish authorized *use* from *exposure*, not to drop the leak protection.
+
+**Correct form (Claude Code idiom):** Make the authorization explicit and durable so it is not re-decided each session. In the always-loaded `CLAUDE.md` (or a path-scoped rule), state that the provisioned credential is pre-approved for its documented operations, that output is **always redacted** (pipe it through a redactor; never print or commit it raw), and that on an auth failure (e.g. `401`/`403`) the agent should **refresh via the documented mechanism and retry**, escalating only if the refresh itself fails. Better, climb to a deterministic mechanism — a credential helper or a session-start refresh hook — so the agent never meets an expired credential and the operator never reminds it. The litmus for "use it": is this the agent's intended, scoped, provisioned authorization to act? Then use it, redacted. Is it out of scope, someone else's, or bound for somewhere it should not go? Then do not.
+
+**Key review questions:** Does anything tell the agent the provisioned credential is authorized for use, or will it re-litigate or refuse every session? When the credential expires, does the agent self-recover (refresh + retry) or stall waiting for a human? Is output redacted so *use* never becomes *exposure*?
+
+**Example finding:** "SHOULD: nothing in `CLAUDE.md` states that the provisioned API token is authorized for the agent's push/API operations, so the agent re-asks or hesitates every session and stalls when it expires — the operator ends up reminding it each time. Add a short pre-authorization rule (use it freely for the documented operations, output always redacted, refresh-and-retry on a `401`/`403`), or a session-start refresh hook, so authorized use is settled once rather than re-litigated per session."
+
 ### Devcontainer Persistence
 
 **What to look for:** When the setup runs in a devcontainer, which parts of it survive a rebuild. Project files persist (they are a bind mount), so a committed `.claude/` comes back. But `~/.claude/` does **not** persist across container rebuilds unless it is mounted as a named volume (a mount like `source=claude-code-config,target=/home/<user>/.claude,type=volume`). Watch for a setup that relies on personal-scope skills, settings, or auth in `~/.claude/` inside a container with no such mount.
@@ -170,6 +185,8 @@ Before raising or accepting a setup decision, the reviewer should be able to ans
 - **Legacy `commands/` instead of `skills/`** — *Diff/setup:* workflows kept in `.claude/commands/` when they would be skills. *Harm:* `commands/` is superseded and forgoes the richer frontmatter, auto-triggering, and discovery that skills provide. *Fix:* migrate to `.claude/skills/<name>/SKILL.md` with a proper description — verify the migration path in your Claude Code version.
 
 - **Personal-scope reliance in a devcontainer with no mount** — *Diff/setup:* a container that depends on `~/.claude/` skills or settings without a named-volume mount. *Harm:* the setup vanishes on the next rebuild and silently stops working. *Fix:* commit what the project needs under `.claude/` (it rides the bind mount), or mount `~/.claude/` as a named volume.
+
+- **Agent that refuses or re-litigates its authorized credential** — *Diff/setup:* nothing pre-authorizes a provisioned token/session/key, so the agent treats *using* it as a risk — re-asking, hesitating, or stalling — and has no expiry-refresh path. *Harm:* authorized work stalls, the same approval is re-litigated every session, and an expired credential becomes a manual reminder loop; the operator is trained to babysit. *Fix:* state the credential is pre-approved for its documented operations with output always redacted, and self-recover on an auth failure (refresh + retry) — or add a credential helper / session-start refresh hook. Distinguish *use* (expected) from *exposure* (forbidden); do not drop the leak guardrail.
 
 ## Verify Against Current Docs
 

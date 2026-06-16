@@ -52,10 +52,22 @@ knows when to stay silent.
      tested. Apply it with a **diff/PR focus** on the changed tests and the code under change: judge
      whether a test can fail for the right reason, never demand coverage numbers, and defer test
      style to linters.
+   - [`../../lenses/spring-production-readiness.md`](../../lenses/spring-production-readiness.md) —
+     when the diff touches a process/network boundary (HTTP client, DB query, broker, cache), a state
+     change reachable by retry/redelivery, a transaction or `@Async`/`@Cacheable`/`@Scheduled`
+     boundary, shared mutable state on a bean, a query in a loop or an unbounded result set, or a
+     resource (stream, connection, lock). Apply it with a **diff/PR focus** at the line/method level —
+     name the runtime failure mode (pool exhaustion, double effect, data race, leak, partial write) —
+     and stay silent on speculative hardening with no named failure.
+   - [`../../lenses/solid.md`](../../lenses/solid.md) — when the diff moves a responsibility boundary
+     (a class/method taking a second reason to change), a type hierarchy or `instanceof`/`switch`
+     dispatch that must stay substitutable, an interface's shape, or the direction of a dependency
+     (high-level policy reaching for a concrete/infra detail). Apply it with a **diff/PR focus** and
+     **heavy restraint** — most SOLID observations are `NO_COMMENT`; raise one only when a principle's
+     violation has a named consequence (a change forces editing unrelated code, a polymorphic caller
+     breaks, a needed test seam is blocked), never because a layer or interface is "missing".
    - [`../../rules/severity-rubric.md`](../../rules/severity-rubric.md) — always; classify every
      finding `MUST` / `SHOULD` / `NIT` / `NO_COMMENT`.
-   - *(More shared lenses — SOLID, Spring production-readiness — are
-     declared here as they are added to `lenses/`.)*
 5. **Prioritize reasoning-heavy concerns** the linter cannot catch: correctness, transaction
    boundaries, idempotency, concurrency, error handling, security, observability, and
    production risk.
