@@ -6,6 +6,10 @@
 > [Learn protocol](#learn-protocol) below, in full.**
 > Answer in the user's language.
 
+**Version:** see [`VERSION`](VERSION) · what changed per release: [`CHANGELOG.md`](CHANGELOG.md) · each
+release is a git tag (`vX.Y.Z`). If you've absorbed an earlier version, use the
+[patch update path](#staying-current--patches) — read only the delta, not the whole repo.
+
 ## What this repository is
 
 A small, sanitized library of **software-engineering skills** for Claude Code. It encodes
@@ -138,11 +142,32 @@ Report exactly which files you created. Make minimal changes and stop if anythin
   not generate an unsolicited audit, scorecard, or backlog of questions/improvements about the repo.
   Offer deeper analysis only if the user explicitly asks — and keep it bounded when they do.
 
+## Staying current — patches
+
+This repository is **versioned**: the current version is in [`VERSION`](VERSION), what changed in each
+release is in [`CHANGELOG.md`](CHANGELOG.md), and every release is a git tag (`vX.Y.Z`). **A newer tag
+/ `VERSION` than the one you last absorbed is the signal that a new patch is available.**
+
+When the user says a new patch is out — **"saiu o novo patch"**, "atualizou o repo", "learn what
+changed", "pull the latest" — run the **update path**, not a full re-learn:
+
+1. `git pull` (and `git fetch --tags`); read [`VERSION`](VERSION) / the newest tag.
+2. If it is newer than the version you last absorbed, read **only** the [`CHANGELOG.md`](CHANGELOG.md)
+   entries since that version, and open just the lenses/skills those entries name — **not** the whole
+   repo.
+3. Update your durable memory/config for only those changes, and **record the new version** as the one
+   you have absorbed (e.g. a memory note: "absorbed claude-engineering-skills @ vX.Y.Z").
+
+Run the full [Learn protocol](#learn-protocol) only on first contact, or when you have no recorded
+version to diff from.
+
 ## Adding to this repo (for maintainers)
 
 - New **skills** go under `skills/<name>/SKILL.md` (one per *type of work*, never per pattern);
   new **lenses** under `lenses/<topic>.md` (one per subject, shared across skills).
 - Update the [Structure map](#structure-map) above with the new skill/lens.
+- For a user-visible change, add a [`CHANGELOG.md`](CHANGELOG.md) entry, bump [`VERSION`](VERSION), and
+  tag the merge (`vX.Y.Z`) — that is what lets a CLI absorb the patch as a delta, not a full re-learn.
 - Every finding a skill emits must name a concrete consequence; if it can't, it's `NIT` or
   `NO_COMMENT`. Keep architecture rules separate from style preferences. No copyrighted or
   corporate material — synthetic, neutral examples only.
