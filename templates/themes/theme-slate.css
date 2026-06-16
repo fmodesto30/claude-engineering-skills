@@ -1,0 +1,18 @@
+/* theme-slate — neutral light theme (example). Override the report's :root with these,
+   or apply via [data-theme="slate"]. Neutral by design — no brand. See ../THEMING.md. */
+:root,
+[data-theme="slate"] {
+  --bg:         #ffffff;
+  --ink:        #1b2430;
+  --muted:      #5d6b7a;
+  --line:       #e3e8ee;
+  --soft:       #f5f8fb;
+  --accent:     #2c5f8a;
+  --brand:      #2c5f8a;
+  --brand-text: #1f4a6e;
+  --bar:        #5a8bb8;
+  --up:         #2f8f4f;
+  --down:       #b14242;
+  --logo-bg:    #2c5f8a;
+  --logo-text:  #ffffff;
+}
