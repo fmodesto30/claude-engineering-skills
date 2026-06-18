@@ -10,6 +10,22 @@ that **a new patch is available**.
 > entries name — rather than re-reading the whole repo. See the *patch update path* in
 > [`CLAUDE.md`](CLAUDE.md#staying-current--patches).
 
+## [0.4.0] — 2026-06-18
+
+### Added
+- **Lens `model-and-effort-economy`** — the cost-side sibling of `agent-skills`: right-sizing the
+  model tier, thinking effort, context-window size, and multi-agent fan-out to a task's difficulty
+  under a token or cost budget. Names the cost levers (each a spend multiplier), a difficulty-based
+  right-sizing heuristic judged by the *hidden correctness surface* (not the surface label), and a
+  deliberate severity asymmetry: **false economy** (a cheap tier on genuinely hard work, whose redo
+  costs more than the right tier once) is the `MUST`; overspend is a `SHOULD`-or-softer nudge.
+  Minimize total cost-to-correct, not per-turn cost; never downgrade hard work to hit a budget.
+- **Skill `effort-budget`** — a meta/ops skill that flags an over- or under-provisioned session and
+  proposes one right-sizing checkpoint (current tier to recommended, reason, concrete saving),
+  proceeding on the user's choice. Read-only/advisory; warns once, never nags; never switches
+  silently; surfaces a budget-vs-need conflict (cut scope / split / raise budget) instead of
+  silently downgrading. Consumes `model-and-effort-economy`.
+
 ## [0.3.0] — 2026-06-16
 
 ### Added
