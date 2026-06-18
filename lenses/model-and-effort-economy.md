@@ -59,10 +59,25 @@ Before raising or accepting a provisioning decision, the reviewer should be able
 - If provisioned *above* the task: what is the one concrete nudge (current → recommended, reason, saving), and is the user left free to decide?
 - If provisioned *below* the task: would the cheaper configuration produce a wrong/incomplete answer whose redo costs more than the right tier once? (If so, do not downgrade — raise it.)
 - Is capability being spent on nothing — re-reading a just-written file, re-deriving a settled conclusion, asking a decision the agent could make, padding output?
+- Can the session see its own spend — a session total and, if possible, per-turn — and under a stated budget is consumption read against the cap rather than guessed?
 - Is this the user's explicit high-tier choice? (If so, NO_COMMENT.)
 - What Claude Code version and provider is this, and do the model names, effort-level names, window sizes, and fan-out features this judgment relies on exist and behave as assumed?
 
 ## Heuristics
+
+### Make the Spend Visible — you cannot right-size what you cannot see
+
+**What to look for:** Whether the operator — and the agent — can actually see what a session is spending, per session and ideally per turn. Right-sizing is blind without a number to anchor it. Watch for a session running under a stated budget with no visibility into consumption, or an agent asserting "this is cheaper" with no measurement behind it.
+
+**Why it matters:** A budget with no meter is a guess. Under a hard per-user cap, the difference between "there is headroom" and "the budget is about to run out" is a number the session can read — and without it, every right-sizing call is uncalibrated and overspend is discovered only when the budget is already gone, mid-task. Visibility is what turns the rest of this lens from intuition into a decision.
+
+**When NOT to comment:** When the operator already has the spend in view (a usage command, a status line, a parsing tool, or telemetry) and is using it, say nothing — the meter is doing its job. Do not demand a heavyweight monitoring stack for a session with no budget pressure.
+
+**Correct form (Claude Code idiom):** Surface the spend with the cheapest mechanism that fits. Claude Code exposes session totals through a usage command (`/usage`, and/or `/cost` — *verify the command name in your version*: a cost estimate, duration, and a token breakdown by attribution) and context-window pressure through `/context`. Per-turn granularity is not a built-in command — it comes from the local session transcript (a JSONL file under the per-project session directory that records per-message token usage), parsed directly or with a community accounting tool (for example `ccusage`); *the transcript schema is not officially documented, so verify the fields in your version*. Where telemetry is permitted, Claude Code emits per-request token and cost metrics over OpenTelemetry (`claude_code.token.usage`, `claude_code.cost.usage`) for a real dashboard — but with telemetry disabled those exports are gone, while the usage command, `/context`, and local transcript parsing still work offline. Pick the lightest mechanism that gives the operator a number; do not stand up a metrics backend a single budgeted session does not need.
+
+**Key review questions:** Can this session see its own spend (a usage command, a transcript parse, a status line, telemetry)? Under a stated budget, is consumption being read against the cap, or only guessed? Is the chosen visibility mechanism proportionate to the need?
+
+**Example finding:** "SHOULD: this session runs under a fixed per-user budget but nothing surfaces consumption, so every right-sizing call is uncalibrated and an overrun would only be noticed once the budget is spent. Check the session total with the usage command and per-turn cost from the local transcript (or a tool like `ccusage`) so the budget has a meter — verify the command name and transcript fields in your version."
 
 ### Right-Sizing Capability to Task Difficulty
 
@@ -138,6 +153,8 @@ One technique in this family is **conditional, not free**: compressing noisy too
 
 ## Anti-Patterns
 
+- **Flying blind under a budget** — *Setup:* a session running under a hard token or cost cap with no visibility into its own consumption — no usage command checked, no transcript parse, no telemetry. *Harm:* right-sizing is uncalibrated guesswork and an overrun is discovered only when the budget is already gone, mid-task. *Fix:* surface the spend with the lightest mechanism that fits — a usage command for the session total, `/context` for window pressure, local transcript parsing (or a tool like `ccusage`) for per-turn — and read it against the cap. (Verify command names and transcript fields in your version.)
+
 - **Top tier on trivia** — *Setup:* the highest tier and effort on a rename, a formatting pass, a doc tweak, or pure retrieval. *Harm:* a large per-turn multiplier paid for capability the task cannot use. *Fix:* drop to a mid tier at medium effort for shallow mechanical work, or a cheap/fast model for retrieval; surface one nudge and let the user decide.
 
 - **False economy on hard work** — *Setup:* a cheap/fast model or low effort on subtle correctness/concurrency reasoning, novel design, security reasoning, or a cross-cutting refactor with hidden coupling. *Harm:* a wrong or incomplete answer whose redo costs more than the right tier once and erodes trust — the expensive failure, whether or not a later gate catches it. *Fix:* raise the tier/effort to match difficulty; never downgrade hard work to hit a budget.
@@ -167,6 +184,7 @@ Claude Code evolves, and the cost levers below are version- and provider-depende
 - **Context-window sizes and billing** — the default (~200K) and wide (1M) sizes, how a wide window is selected, whether the provider deployment supports it, and how it is billed (including whether prompt caching or a premium tier applies) are all version- and provider-dependent. A configured wide window can be silently capped — verify the *effective* window engaged, not the configured string.
 - **Multi-agent fan-out** — whether and how a workflow, parallel subagents, or a deep multi-agent review are available, their default and maximum subagent counts, and the per-subagent cost model are version-dependent.
 - **Background/utility model** — the model used for background work runs independently of interactive settings and its variable names change across versions; confirm the current configuration and cost before assuming it is cheap or disabled.
+- **Usage and cost visibility** — the usage command name and output (`/usage` and/or `/cost`), `/context`, the local session-transcript location and schema, and the OpenTelemetry metric names are all version-dependent, and the transcript schema is not officially documented. Verify them in your version before relying on a specific command or field; with telemetry disabled the OTEL exports are unavailable while the usage command, `/context`, and local transcript parsing still work.
 - **Delegation and hook mechanisms** — subagent delegation and output-compression hooks are documented, but verify they are available and behave as expected before depending on them.
 
 When the running version, provider, or effective configuration disagrees with an assumption, the running configuration wins — inspect it.

@@ -39,6 +39,9 @@ job is to spend the right amount of capability on the work, not the most.
   far more to fix.
 - **Explaining clearly is never the cut.** Reasoning the user needs to see, a thorough answer, or
   context a correct result depends on is not waste — never trim the explanation to save tokens.
+- **You cannot right-size what you cannot see.** Surface the session's spend so the budget has a
+  meter — a usage command for the session total, the local transcript (or a tool like `ccusage`)
+  for per-turn — rather than guessing. An uncalibrated guess is not a budget.
 
 ## How to run
 
@@ -48,7 +51,10 @@ job is to spend the right amount of capability on the work, not the most.
    or security surface that makes it hard. This is the anchor; everything else is measured against it.
 2. **Read the current provisioning.** Note what the session is running: the **model** tier, the
    **thinking-effort** level, the **context window** in use, and whether a **multi-agent fan-out**
-   is planned (and how wide). Note any **stated budget** — a token cap or a cost ceiling.
+   is planned (and how wide). Note any **stated budget** — a token cap or a cost ceiling — and,
+   where visible, the **current spend against it**: a usage command for the session total (`/usage`
+   and/or `/cost` — verify in your version), `/context` for window pressure, and the local session
+   transcript (or a tool like `ccusage`) for per-turn cost. A budget with no meter is a guess.
 3. **Judge the mismatch with the lens.** Compare difficulty against provisioning using
    [`../../lenses/model-and-effort-economy.md`](../../lenses/model-and-effort-economy.md) — tier
    fit, effort fit, window fit, and fan-out fit, and how each reads under a stated budget. Load the

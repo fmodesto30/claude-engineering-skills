@@ -20,6 +20,9 @@ that **a new patch is available**.
   deliberate severity asymmetry: **false economy** (a cheap tier on genuinely hard work, whose redo
   costs more than the right tier once) is the `MUST`; overspend is a `SHOULD`-or-softer nudge.
   Minimize total cost-to-correct, not per-turn cost; never downgrade hard work to hit a budget.
+  Includes a **make-the-spend-visible** heuristic — you cannot right-size what you cannot see: the
+  usage command (`/usage` / `/cost`), `/context`, per-turn parsing of the local session transcript
+  (or `ccusage`), and OpenTelemetry metrics, all version-gated and working offline without telemetry.
 - **Skill `effort-budget`** — a meta/ops skill that flags an over- or under-provisioned session and
   proposes one right-sizing checkpoint (current tier to recommended, reason, concrete saving),
   proceeding on the user's choice. Read-only/advisory; warns once, never nags; never switches
