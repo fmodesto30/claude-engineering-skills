@@ -123,8 +123,10 @@ Map findings to the consuming skill's severity rubric (see
   - A **money-movement / irreversible flow with no alertable failure signal at all** — a `Payment`
     capture, a `Transfer`, a `Ledger` post whose failure increments nothing and logs nothing an alert
     can match, so the system is **blind to its own failure**: it fails and no one is paged until a
-    customer complains. (This is the observability *angle* — "blind to alert on" — carved against the
-    production-readiness lens's "no metric on a critical flow"; see the carve below.)
+    customer complains. This is `MUST` only when **both** hold — the flow is money-movement/irreversible
+    **and** there is *no* matchable signal at all (no counter, no alertable log): total blindness on an
+    irreversible path, a hazard, not a mere diagnosability gap. A *recoverable* critical flow merely
+    missing a metric stays `SHOULD` and is production-readiness's call, so the two don't collide on one diff.
   - A **secret, token, or PII written to a log** is a `MUST`, but it is the **`security` lens's and the
     rubric's** `MUST`, not this lens's — defer it (see "stay in your lane").
 - **SHOULD** — a real, nameable operability cost that is not a defect today.
@@ -293,7 +295,7 @@ a label whose value set is provably tiny.
 **Modern Java/Spring idiom:** Keep metric tags to a **bounded, low-cardinality** set; put the
 high-cardinality identifier on the **trace** (a span attribute / baggage) or a **structured log field**
 instead. Use the **route template**, not the concrete URL, as the tag (Spring's `uri` tag already does
-this via `WebMvcTags`/`ServerHttpObservation` — *verify the Boot version*). For exceptions, tag with the
+this via Boot's HTTP-server observation (`ServerHttpObservationFilter` / `ServerRequestObservationConvention` on Boot 3.x; `WebMvcTags` on older) — *verify the Boot version*). For exceptions, tag with the
 exception **class**, not the (often unique) message. If a per-entity breakdown is genuinely needed, that
 is a logging/tracing or analytics query, not a metric dimension. *Verify the registry and the backend's
 cardinality limits before relying on any tag.*
@@ -532,7 +534,7 @@ against the actual project; never assume a version, a registry, a backend, or a 
   *Verify the Actuator version and which probe groups are enabled before recommending the properties;
   required dependency → readiness, process health → liveness.*
 - **PII/secret in logs** — out of scope here: that is a `MUST` under the
-  [`../rules/severity-rubric.md`](../rules/severity-rubric.md) and the (planned) `security` lens. This
+  [`../rules/severity-rubric.md`](../rules/severity-rubric.md) and the `security` lens. This
   lens owns the **structure, level, and queryability** of the log, not whether its *content* is a
   secret. (Cross-reference, do not duplicate.)
 
@@ -601,7 +603,7 @@ Short examples with neutral nouns:
     across any thread/async/message boundary, metric type and cardinality, log structure — not the
     saga's end-to-end story. When the flow is a saga, defer the workflow-correlation finding to the saga
     lens; keep the line-level "this tag is unbounded" / "this hop drops MDC" finding here.
-  - **`security`** (planned) and the **[`../rules/severity-rubric.md`](../rules/severity-rubric.md)**
+  - **`security`** and the **[`../rules/severity-rubric.md`](../rules/severity-rubric.md)**
     own **PII/secret in a log** — that is *their* `MUST`. This lens owns the **level, structure, and
     queryability** of the log, and defers its *content*-safety. Flag the structure here, the secret
     there.

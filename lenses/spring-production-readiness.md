@@ -286,7 +286,7 @@ when it fails at 3am.
 that should not fail the request, with a comment saying so), the cause is chained, and the failure is
 observable. Do not demand a log line on every branch, or treat *deep* security/PII-in-log concerns as
 this lens's job — a secret or PII written to a log is a `MUST` under the severity rubric and the
-(planned) `security` lens; here, only flag the *diagnosability* gap.
+`security` lens; here, only flag the *diagnosability* gap.
 
 **Modern Spring idiom:** Let exceptions propagate to a single boundary handler (`@ControllerAdvice` /
 `@ExceptionHandler`) rather than swallowing locally; preserve the cause (`throw new XException("...",
@@ -388,7 +388,7 @@ can't compile is worse than none. Frame each as *verify against the actual proje
   the need for downstream timeouts.*
 - **Observability** — Micrometer metrics (`@Timed`, counters), the Observation API and tracing on Boot
   3.x, a correlation id via MDC. *Verify Micrometer/Actuator is on the classpath before recommending the
-  API.* (Deep security/PII-in-log concerns are the severity rubric's and the planned `security` lens's
+  API.* (Deep security/PII-in-log concerns are the severity rubric's and the `security` lens's
   job, not this one.)
 
 When the simplest correct thing is *no* extra machinery — the call is in-process, the effect is
@@ -427,7 +427,7 @@ Short examples with neutral nouns:
 - **Always tag severity** — MUST / SHOULD / NIT — per the consuming skill's rubric, and always name the
   concrete consequence. NO_COMMENT is the silent fourth outcome.
 - **Stay in your lane.** Pattern *structure* is the `design-patterns` lens; whether a path is *tested* is
-  the `testing` lens; deep security/PII is the rubric and the planned `security` lens. This lens owns the
+  the `testing` lens; deep security/PII is the rubric and the `security` lens. This lens owns the
   runtime production consequence — the timeout, the idempotency, the race, the leak, the partial write.
 - **Prefer a few strong findings over many weak ones.** One unguarded external call or one double-charge
   risk lands; ten "consider a timeout" notes bury it.

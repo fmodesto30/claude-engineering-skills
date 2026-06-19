@@ -95,6 +95,21 @@ opposite, generative intent — to *decide* what to build before it exists.
      [`../../lenses/testing.md`](../../lenses/testing.md) — to shape acceptance and testability:
      decide what makes the change verifiable and what a test must be able to fail for the right
      reason. *Wrong → requirements no test can check, a critical path with no acceptance criterion.*
+   - [`../../lenses/security.md`](../../lenses/security.md) — decide the security the design must commit
+     to up front: where the trust boundary falls, the authorization model (who may do what to which
+     object), the data classification of each field, and how secrets are managed. *Wrong → an authz
+     model left implicit, sensitive data with no classification, a secret-handling story decided after
+     the fact.*
+   - [`../../lenses/observability.md`](../../lenses/observability.md) — decide the observability model:
+     the signals and correlation id that make a risk-bearing flow diagnosable, what a boundary measures
+     (with bounded-cardinality labels), and what symptom pages someone. *Wrong → a money-movement flow
+     with no alertable signal, a high-cardinality label baked into the design, no correlation across a
+     cross-boundary flow.*
+   - [`../../lenses/event-driven.md`](../../lenses/event-driven.md) — when the design communicates by
+     events: decide whether to be event-driven at all (vs. a synchronous call), the event kind
+     (notification vs. carried state vs. sourcing), and how the event schema will version. *Wrong →
+     events where a synchronous call was simpler, an un-versioned integration event, an ordering the
+     broker won't guarantee.*
 
 5. **Define Acceptance Criteria.** Using the testing lens generatively, write the concrete, checkable
    conditions that define done — each one something a person or a test can verify pass/fail, mapping

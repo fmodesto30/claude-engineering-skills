@@ -26,7 +26,7 @@ secret-management story — so the reviewer does not later have to find it missi
 It is the lens the rest of the review track **delegates security to**. `spring-production-readiness`
 says so explicitly: its error-handling heuristic notes that "a secret or PII written to a log is a
 `MUST` under the severity rubric and the … `security` lens; here, only flag the *diagnosability* gap,"
-and its observability modernization defers "deep security/PII-in-log concerns" to "the planned
+and its observability modernization defers "deep security/PII-in-log concerns" to "the
 `security` lens, not this one." So **this lens owns the secret-in-log / PII-in-log MUST** and the
 adversarial reading of a flow; production-readiness owns the runtime-failure reading of the same code.
 Both can fire on one diff with different findings: where production-readiness asks "does this `catch`
@@ -378,8 +378,8 @@ trust-all `TrustManager`, `setHostnameVerifier` accepting all).
 **Why it matters:** Each mismatch has a direct exploit. A fast hash over a password means a stolen
 database is cracked offline at billions of guesses per second — an adaptive KDF (`BCrypt`/`Argon2`/
 `PBKDF2`) is deliberately slow to make that infeasible. `java.util.Random` is a linear congruential
-generator whose output is *predictable* from a few samples, so a token/reset-code built on it can be
-guessed — letting an attacker forge a session or hijack a reset. ECB mode reveals plaintext patterns
+generator whose state is *recoverable* from a few consecutive observed outputs (a 48-bit seed), so a
+token/reset-code built on it can be predicted — letting an attacker forge a session or hijack a reset. ECB mode reveals plaintext patterns
 (identical blocks encrypt identically), and a hard-coded key means "encrypted" data is readable by
 anyone with the source. A trust-all TLS manager defeats the point of TLS — a MITM reads everything.
 
@@ -435,7 +435,9 @@ gadget sink. Do not invent an SSRF where the destination is a constant.
 
 **Modern Java/Spring idiom:** Avoid native Java serialization for any external boundary — use JSON to
 explicit DTO types and keep polymorphic/default typing **off** (validate types explicitly if
-polymorphism is genuinely needed). Harden XML parsers: disable DTDs
+polymorphism is genuinely needed; note Jackson 2.10+ blocks gadget types via a `PolymorphicTypeValidator`
+even when default typing is enabled, so the acute RCE case is pre-2.10 or a permissive/absent PTV —
+verify the Jackson version and whether a PTV is configured). Harden XML parsers: disable DTDs
 (`setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)`) and external entities, or
 use a library configured secure-by-default. For request-driven outbound calls, **allowlist** the
 destination (scheme + host), resolve and re-check the host, and block private/loopback/link-local
@@ -533,7 +535,9 @@ Is the CORS origin an explicit allowlist, or `*`/reflected on a credentialed API
   proxies the attacker to internal services / cloud metadata (credential theft). *Fix:* allowlist
   scheme+host, re-resolve and block private/loopback/metadata ranges, prefer an egress proxy.
 - **Mass assignment** — *Diff:* a request body bound directly onto an entity/wide command. *Harm:* the
-  caller sets a privilege/ownership field (`role`, `ownerId`) and it persists. *Fix:* bind to a scoped
+  caller sets a privilege/ownership field (`role`, `ownerId`) and it persists — `MUST` when that field is
+  live authority now (read during authorization), `SHOULD` when the bindable field is currently inert.
+  *Fix:* bind to a scoped
   DTO with only settable fields; map server-side.
 - **CSRF disabled on a session app / wildcard CORS on a credentialed API** — *Diff:* `csrf().disable()`
   with cookie auth, or `allowedOrigins("*")` + credentials. *Harm:* a malicious site forges
@@ -640,7 +644,8 @@ Short examples with neutral nouns:
   reading of the same code (a swallowed exception losing data, a missing timeout, a race) is
   [`./spring-production-readiness.md`](./spring-production-readiness.md)'s. Input validation here is under
   a **security** lens (does it reach a sink / cross a trust boundary?), not generic Bean Validation
-  shape. Idempotency/at-least-once handling at the boundary is production-readiness and
+  shape (a DTO's *shape* / required-ness with no sink reach is `clean-code` / `spring-production-readiness`,
+  not this lens). Idempotency/at-least-once handling at the boundary is production-readiness and
   [`./saga.md`](./saga.md); where the consistency/authority boundary *falls* (which aggregate owns a
   decision) is [`./ddd.md`](./ddd.md). Whether a security path is *tested* is [`./testing.md`](./testing.md);
   structural patterns are [`./design-patterns.md`](./design-patterns.md) and [`./solid.md`](./solid.md).

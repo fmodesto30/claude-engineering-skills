@@ -10,6 +10,33 @@ that **a new patch is available**.
 > entries name — rather than re-reading the whole repo. See the *patch update path* in
 > [`CLAUDE.md`](CLAUDE.md#staying-current--patches).
 
+## [0.7.1] — 2026-06-19
+
+### Fixed
+- **Lens consumer wiring** — `spec-author` now declares `security`, `observability`, and `event-driven`
+  in its generative lens list, making real the generative-consumer contract those three lenses already
+  claimed (they shipped in v0.6.0 asserting `spec-author` as a consumer, but it was never wired to load
+  them).
+- **Stale "planned `security` lens" references** — `security` exists (v0.6.0), so dropped the
+  "(planned)" qualifier from the cross-references in `observability` (×2), `spring-production-readiness`
+  (×3), and the quoted deferral inside `security` itself.
+- **`security` lens precision** — named the owner of non-sink DTO-shape validation (`clean-code` /
+  `spring-production-readiness`) rather than only saying what it is not; version-gated the
+  insecure-deserialization MUST (Jackson 2.10+ blocks gadget types via a `PolymorphicTypeValidator`, so
+  the acute case is pre-2.10 / a permissive PTV); made the mass-assignment MUST-vs-SHOULD trigger
+  explicit (live authority vs. inert field); softened the `java.util.Random` claim to the defensible
+  "recoverable from a few consecutive outputs (48-bit seed)".
+- **`observability` lens precision** — made the money-movement MUST escalation criterion explicit (MUST
+  only when both irreversible AND zero matchable signal; a recoverable flow missing a metric stays
+  SHOULD, production-readiness's call), and corrected the Boot HTTP-server observation class names
+  (`ServerHttpObservationFilter` / `ServerRequestObservationConvention`).
+- **`event-driven` lens** — reframed the distributed-monolith MUST as the *event-topology* consequence
+  and deferred the aggregate-boundary/atomicity judgment to `ddd` (instead of re-deriving DDD's test),
+  and trimmed a redundant consumer parenthetical.
+
+All from an adversarial review pass over the v0.6.0 lenses — the verification the original authoring
+workflow could not finish (it hit a session limit after writing the files). Sanitization gate passes.
+
 ## [0.7.0] — 2026-06-19
 
 ### Added
