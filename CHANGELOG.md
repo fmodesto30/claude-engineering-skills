@@ -10,6 +10,30 @@ that **a new patch is available**.
 > entries name — rather than re-reading the whole repo. See the *patch update path* in
 > [`CLAUDE.md`](CLAUDE.md#staying-current--patches).
 
+## [0.5.0] — 2026-06-19
+
+### Added
+- **Skill `architecture-decision-records`** — a construction skill that records *why* an
+  architecturally-significant decision was made: its context and forces, the decision, the
+  alternatives genuinely considered and why each was rejected, and the consequences (the costs
+  accepted, not only the upside). Records **only** significant, hard-to-reverse, cross-cutting
+  decisions — a reversible local choice is `NO_COMMENT`, not an ADR — and treats an accepted record
+  as immutable: a changed decision is **superseded** by a new record, never edited in place, so the
+  decision trail stays true. Reads the architecture lenses (`ddd`, `saga`, `cqrs`, `cdc`,
+  `spring-production-readiness`) generatively. The `MUST` is a significant decision shipped with no
+  record, or history rewritten by editing an accepted one.
+- **Skill `eval-harness`** — a meta/quality skill that brings measurement to non-deterministic
+  outputs (an LLM feature, agent, classifier, ranker) where a pass/fail unit test does not fit. It
+  defines the success criteria and a versioned dataset (representative + edge + adversarial, with a
+  held-out slice), picks the strongest grader the criterion allows (deterministic > reference metric >
+  validated LLM-as-judge), pins and records the run config (model, prompt, temperature, seed), and
+  compares against a baseline with **n and variance** — never claiming a win inside the noise — while
+  tracking cost and latency next to quality. Pairs with `effort-budget` (right-size the model; then
+  prove it still clears the bar) and consumes `testing`, `data-analysis`, `data-engineering`,
+  `model-and-effort-economy`. The `MUST` is shipping a non-deterministic change with no eval, claiming
+  an improvement within the noise, or an unvalidated judge driving a ship decision. Stays out of
+  deterministic-code territory, which belongs to the `testing` lens / `java-pr-review`.
+
 ## [0.4.0] — 2026-06-18
 
 ### Added
