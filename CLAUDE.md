@@ -43,7 +43,7 @@ The building blocks (see [README.md](README.md#architecture-model) for the full 
 
 ## Structure map
 
-Nine skills across three tracks. Load a skill's lenses only when the change actually touches that area.
+Ten skills across three tracks. Load a skill's lenses only when the change actually touches that area.
 
 **Review** — judge code/design that already exists (*evaluative*):
 
