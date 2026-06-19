@@ -59,6 +59,7 @@ lenses/
 ├── data-engineering.md      # data quality, lineage, grain; blocks unsound conclusions
 ├── ddd.md                   # domain modeling: boundaries, aggregates, consistency
 ├── design-patterns.md       # patterns that help vs. hurt (Java/Spring)
+├── model-and-effort-economy.md # (meta) right-size model/effort/window/fan-out to task; cost vs. correctness
 ├── reporting.md             # (output) final shaping stage: narrative + HTML from a validated analysis
 ├── saga.md                  # cross-service consistency without distributed transactions
 ├── solid.md                 # responsibility, substitutability & dependency direction of changed code
@@ -85,6 +86,8 @@ skills/
 │   └── SKILL.md             # review: a Java/Spring design at system altitude
 ├── claude-setup-audit/
 │   └── SKILL.md             # (meta) audit & fix a Claude Code .claude/ setup
+├── effort-budget/
+│   └── SKILL.md             # (meta) right-size model/effort/window/fan-out under a token/cost budget
 ├── java-pr-review/
 │   └── SKILL.md             # review: a Java/Spring PR diff
 ├── report/

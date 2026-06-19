@@ -43,7 +43,7 @@ The building blocks (see [README.md](README.md#architecture-model) for the full 
 
 ## Structure map
 
-Five skills across three tracks. Load a skill's lenses only when the change actually touches that area.
+Six skills across three tracks. Load a skill's lenses only when the change actually touches that area.
 
 **Review** — judge code/design that already exists (*evaluative*):
 
@@ -65,10 +65,11 @@ Five skills across three tracks. Load a skill's lenses only when the change actu
 |---|---|---|
 | [`claude-setup-audit`](skills/claude-setup-audit/SKILL.md) | auditing/fixing a `.claude/` setup (skill not triggering, resource won't resolve, secret in config) | `agent-skills` |
 | [`retrospective`](skills/retrospective/SKILL.md) | after a task or a **repeated error** — "save this lesson", "don't repeat this", "configure so this can't happen again", "what did we learn" | `agent-skills` |
+| [`effort-budget`](skills/effort-budget/SKILL.md) | right-sizing model/effort/window/fan-out, or flagging an **over-provisioned session** under a token/cost budget ("do I need the top model for this?") | `model-and-effort-economy` |
 
 **Lenses** (`lenses/`, shared knowledge loaded on demand): `design-patterns`, `clean-code`, `testing`,
 `spring-production-readiness`, `solid`, `ddd`, `saga`, `cqrs`, `cdc`, `data-engineering`,
-`data-analysis`, `reporting`, `agent-skills`.
+`data-analysis`, `reporting`, `agent-skills`, `model-and-effort-economy`.
 
 **Rules** (`rules/`, global rubrics a consumer obeys): [`severity-rubric`](rules/severity-rubric.md)
 (`MUST`/`SHOULD`/`NIT`/`NO_COMMENT` — review & audit), `spec-rubric` (`BLOCKER`/`SHOULD`/`NIT`/`OK` —
