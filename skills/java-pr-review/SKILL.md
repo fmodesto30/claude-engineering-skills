@@ -59,6 +59,18 @@ knows when to stay silent.
      resource (stream, connection, lock). Apply it with a **diff/PR focus** at the line/method level —
      name the runtime failure mode (pool exhaustion, double effect, data race, leak, partial write) —
      and stay silent on speculative hardening with no named failure.
+   - [`../../lenses/security.md`](../../lenses/security.md) — when the diff touches a trust boundary
+     (untrusted input reaching a query/command/path/URL/deserializer), an authorization check, a
+     secret/credential, sensitive data (PII/token) heading to a log/response/URL, or a crypto
+     operation. Apply it with a **diff/PR focus** at the line/method level — name the exploit (SQL
+     injection, IDOR, a logged token, a weak password hash) — and delegate dependency-version CVEs to
+     SCA tooling. This lens owns the secret/PII-in-log `MUST` that `spring-production-readiness` defers.
+   - [`../../lenses/observability.md`](../../lenses/observability.md) — when the diff adds/changes a
+     log line, a metric (especially a tag whose value comes from request data), a trace/MDC boundary
+     (`@Async`, an executor, a consumer), or the diagnosability of a risk-bearing flow. Apply it with a
+     **diff/PR focus** on instrumentation *quality* — a structured, queryable log; a low-cardinality
+     metric label; a trace context that survives the hop — not whether visibility merely exists (that
+     gap is `spring-production-readiness`'s).
    - [`../../lenses/solid.md`](../../lenses/solid.md) — when the diff moves a responsibility boundary
      (a class/method taking a second reason to change), a type hierarchy or `instanceof`/`switch`
      dispatch that must stay substitutable, an interface's shape, or the direction of a dependency

@@ -10,6 +10,37 @@ that **a new patch is available**.
 > entries name — rather than re-reading the whole repo. See the *patch update path* in
 > [`CLAUDE.md`](CLAUDE.md#staying-current--patches).
 
+## [0.6.0] — 2026-06-19
+
+### Added
+- **Lens `security`** — application-security review for Java/Spring at line/method and system altitude:
+  injection (SQL/JPQL/command/LDAP/path), authorization & broken-object-level-access (IDOR), secret &
+  credential handling, sensitive-data/PII exposure, cryptography & randomness misuse, insecure
+  deserialization / XXE / SSRF, mass assignment, CSRF/CORS. It **owns the secret/PII-in-log `MUST`**
+  that `spring-production-readiness` explicitly delegates, names the *exploit* (not the OWASP category)
+  for every finding, and delegates dependency-version CVEs to SCA tooling rather than acting as a
+  scanner. Consumed by `java-pr-review`, `architecture-review`, and `spec-author`.
+- **Lens `observability`** — whether a changed flow can be operated and diagnosed in production:
+  structured/queryable logging and honest levels, metric type and **cardinality control** (the label
+  that detonates the time-series backend), trace/correlation propagation across async & messaging
+  boundaries (and MDC leakage on pooled threads), health/readiness/liveness correctness, and
+  symptom-based alertable signals. Carved against `spring-production-readiness` (which flags that a
+  visibility *gap* exists; this lens owns instrumentation *quality*) and `saga` (cross-step
+  correlation), and defers PII/secret-in-log to `security`. Consumed by `java-pr-review`,
+  `architecture-review`, and `spec-author`.
+- **Lens `event-driven`** — the event-driven architectural *style* at system/design altitude: the
+  decision to be event-driven at all (vs. a synchronous call), event design (notification vs.
+  event-carried state transfer vs. event sourcing), domain-vs-integration events, producer/consumer &
+  temporal coupling, **event-schema evolution** (the silent cross-boundary contract break),
+  ordering/partitioning, and topology (pub/sub vs. point-to-point, the coupling/visibility facet of
+  choreography vs. orchestration). Carves explicitly against `saga` (workflow consistency/compensation),
+  `ddd` (aggregate boundary & domain events), `cqrs` (read/write split), `cdc` (capture mechanics), and
+  `spring-production-readiness` (line-level runtime/idempotency mechanics). Consumed by
+  `architecture-review` (per the roadmap) and `spec-author`.
+- **Wiring** — `java-pr-review` now consumes `security` and `observability`; `architecture-review` now
+  consumes `security`, `observability`, and `event-driven`. The structure map, lens tree, and roadmap
+  are updated accordingly.
+
 ## [0.5.0] — 2026-06-19
 
 ### Added

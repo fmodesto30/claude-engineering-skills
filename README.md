@@ -59,9 +59,12 @@ lenses/
 ├── data-engineering.md      # data quality, lineage, grain; blocks unsound conclusions
 ├── ddd.md                   # domain modeling: boundaries, aggregates, consistency
 ├── design-patterns.md       # patterns that help vs. hurt (Java/Spring)
+├── event-driven.md          # event-driven style: event design, coupling, schema evolution, topology
 ├── model-and-effort-economy.md # (meta) right-size model/effort/window/fan-out to task; cost vs. correctness
+├── observability.md         # operability: structured logs, metric cardinality, trace propagation, alertable signals
 ├── reporting.md             # (output) final shaping stage: narrative + HTML from a validated analysis
 ├── saga.md                  # cross-service consistency without distributed transactions
+├── security.md              # app-sec: injection, authz/IDOR, secrets & PII-in-log, crypto, dangerous sinks
 ├── solid.md                 # responsibility, substitutability & dependency direction of changed code
 ├── spring-production-readiness.md # runtime risk: timeouts, idempotency, transactions, concurrency, leaks
 └── testing.md               # test quality: does a test fail for the right reason?
@@ -152,9 +155,11 @@ paraphrased or transcribed.
 
 Lenses and skills grow by real need, never speculatively. Planned next, in rough order:
 
-- **Lenses:** `event-driven`, `observability`, `security`.
-- **Review skills:** `architecture-review` consumes the architecture lenses (`ddd`, `saga`, `cqrs`,
-  `cdc` today; `event-driven` as it lands).
+- **Lenses:** the review/architecture set landed `security`, `observability`, and `event-driven` in
+  v0.6.0; further lenses are added only when a real consumer needs one (no speculative additions).
+- **Review skills:** `architecture-review` consumes the architecture/quality lenses (`ddd`, `saga`,
+  `cqrs`, `cdc`, `event-driven`, `security`, `observability`); `java-pr-review` adds `security` and
+  `observability` at line/method level.
 - **Construction skills:** `spec-author`, `report` (a data-engineering + data-analysis pipeline
   that validates the data, runs the analysis, and only then renders an HTML report whose conclusions
   are sustained by evidence), and `architecture-decision-records` (records *why* a hard-to-reverse,

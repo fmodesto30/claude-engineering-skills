@@ -89,9 +89,28 @@ defers line-by-line concerns to `java-pr-review`.
      under load, or a consistency seam assumed atomic across services. Use it at **system altitude** to
      judge whether the design's failure modes are handled — not the line-level call (that is
      `java-pr-review`).
+   - [`../../lenses/security.md`](../../lenses/security.md) — when the change touches a trust boundary,
+     the authorization model, how secrets flow from source to use, or the threat surface a change adds
+     (a new public endpoint, a deserialization sink, an outbound call to a user-influenced URL). Use it
+     at **system altitude** to judge where the trust boundary falls, whether authorization is enforced
+     consistently rather than ad-hoc, and how secrets and sensitive data are managed — naming the
+     exploit, not the OWASP category.
+   - [`../../lenses/observability.md`](../../lenses/observability.md) — when the change affects whether
+     a flow can be operated and diagnosed: correlation/tracing across a service boundary, what a
+     boundary measures (RED/USE), what pages someone vs. what is noise, or whether a risk-bearing flow
+     is observable enough to learn it is failing before a customer does. Use it at **system altitude**
+     on instrumentation *quality* — the depth behind "is there any visibility?" that
+     `spring-production-readiness` only flags as a gap.
+   - [`../../lenses/event-driven.md`](../../lenses/event-driven.md) — when the design communicates by
+     events: the decision to be event-driven at all (vs. a synchronous call), event design
+     (notification vs. event-carried state transfer vs. event sourcing), domain-vs-integration events,
+     producer/consumer and temporal coupling, event-schema evolution, ordering/partitioning, and
+     topology (pub/sub vs. point-to-point, the coupling/visibility facet of choreography vs.
+     orchestration). Use it to judge whether events decouple what should be decoupled and evolve
+     safely — deferring workflow compensation to `saga`, the read/write split to `cqrs`, and capture
+     mechanics to `cdc`.
    - [`../../rules/severity-rubric.md`](../../rules/severity-rubric.md) — always; classify every
      finding `MUST` / `SHOULD` / `NIT` / `NO_COMMENT`.
-   - *(One more shared lens — event-driven — is added here as it lands in `lenses/`.)*
 5. **Prioritize architecture-level concerns** the line reviewer cannot judge:
    - **Context boundaries & coupling** — does the change respect bounded-context boundaries, or does
      it couple contexts that should evolve independently (shared mutable model, a context reaching
