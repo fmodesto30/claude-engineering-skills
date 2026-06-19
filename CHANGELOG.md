@@ -10,6 +10,18 @@ that **a new patch is available**.
 > entries name — rather than re-reading the whole repo. See the *patch update path* in
 > [`CLAUDE.md`](CLAUDE.md#staying-current--patches).
 
+## [0.7.0] — 2026-06-19
+
+### Added
+- **Skill `skill-author`** — a meta/ops skill for extending the library itself: it decides whether an
+  addition is a **skill** (a type of work), a **lens** (shared knowledge), a **rule** (a global rubric),
+  or nothing, then scaffolds it to the house conventions — a trigger-surface `description`,
+  consequence-driven findings on the shared severity rubric, lenses referenced by relative path,
+  synthetic neutral examples — and keeps the indexes in sync (structure map, README tree,
+  CHANGELOG/VERSION, consuming-skill wiring), verifying the artifact triggers and passes the
+  sanitization gate. Restraint-first: most "add a skill for X" ideas are really a lens, a rule, or
+  nothing, and "don't add this, here is why" is a frequent correct outcome. Consults `agent-skills`.
+
 ## [0.6.0] — 2026-06-19
 
 ### Added

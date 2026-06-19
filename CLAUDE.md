@@ -43,7 +43,7 @@ The building blocks (see [README.md](README.md#architecture-model) for the full 
 
 ## Structure map
 
-Eight skills across three tracks. Load a skill's lenses only when the change actually touches that area.
+Nine skills across three tracks. Load a skill's lenses only when the change actually touches that area.
 
 **Review** — judge code/design that already exists (*evaluative*):
 
@@ -68,6 +68,7 @@ Eight skills across three tracks. Load a skill's lenses only when the change act
 | [`retrospective`](skills/retrospective/SKILL.md) | after a task or a **repeated error** — "save this lesson", "don't repeat this", "configure so this can't happen again", "what did we learn" | `agent-skills` |
 | [`effort-budget`](skills/effort-budget/SKILL.md) | right-sizing model/effort/window/fan-out, or flagging an **over-provisioned session** under a token/cost budget ("do I need the top model for this?") | `model-and-effort-economy` |
 | [`eval-harness`](skills/eval-harness/SKILL.md) | measuring **non-deterministic outputs** (LLM feature, agent, classifier) — dataset + grader + baseline; "is the new model better?", "set up regression testing for the AI feature" | `testing`, `data-analysis`, `data-engineering`, `model-and-effort-economy` |
+| [`skill-author`](skills/skill-author/SKILL.md) | extending **this repo** — "create a skill", "add a lens", "scaffold a skill", "how do I add X here"; decides skill vs. lens vs. rule and keeps the indexes in sync (restraint-first) | `agent-skills` |
 
 **Lenses** (`lenses/`, shared knowledge loaded on demand): `design-patterns`, `clean-code`, `testing`,
 `spring-production-readiness`, `solid`, `ddd`, `saga`, `cqrs`, `cdc`, `data-engineering`,

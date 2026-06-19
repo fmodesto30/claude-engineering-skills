@@ -101,6 +101,8 @@ skills/
 │   └── SKILL.md             # construction: understand -> validate data -> analyze -> HTML report
 ├── retrospective/
 │   └── SKILL.md             # (meta) turn a lesson / repeated mistake into a durable config change
+├── skill-author/
+│   └── SKILL.md             # (meta) scaffold a new skill/lens/rule correctly (or decide not to add one)
 └── spec-author/
     └── SKILL.md             # construction: write a prescriptive spec for a change
 examples/
@@ -169,10 +171,10 @@ Lenses and skills grow by real need, never speculatively. Planned next, in rough
 - **Meta/ops skills:** `claude-setup-audit` (audits & fixes the `.claude/` setup against the
   `agent-skills` lens), `retrospective` (turns a lesson or a repeated mistake into a durable config
   change — hook / rule / CLAUDE.md / memory — so it does not recur), `effort-budget` (right-sizes
-  model/effort/window/fan-out under a token/cost budget), and `eval-harness` (measures
+  model/effort/window/fan-out under a token/cost budget), `eval-harness` (measures
   non-deterministic outputs — an LLM feature, agent, or classifier — against a versioned dataset and a
-  baseline, so a regression is caught before release) today; `skill-author` (scaffold a new skill
-  correctly) as it lands.
+  baseline, so a regression is caught before release), and `skill-author` (scaffolds a new
+  skill/lens/rule correctly — or decides one isn't warranted — keeping the indexes in sync) today.
 
 A lens is added only when a real consumer needs it; a skill is added per type of work.
 
