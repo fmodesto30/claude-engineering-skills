@@ -82,12 +82,16 @@ templates/
 ├── analysis-spec.md         # intermediate analytical contract (the HTML derives from it)
 └── spec.md                  # prescriptive engineering-spec format
 skills/
+├── architecture-decision-records/
+│   └── SKILL.md             # construction: record WHY a hard-to-reverse decision was made (immutable, superseded not edited)
 ├── architecture-review/
 │   └── SKILL.md             # review: a Java/Spring design at system altitude
 ├── claude-setup-audit/
 │   └── SKILL.md             # (meta) audit & fix a Claude Code .claude/ setup
 ├── effort-budget/
 │   └── SKILL.md             # (meta) right-size model/effort/window/fan-out under a token/cost budget
+├── eval-harness/
+│   └── SKILL.md             # (meta/quality) measure non-deterministic outputs (LLM/agent/classifier): dataset + grader + baseline
 ├── java-pr-review/
 │   └── SKILL.md             # review: a Java/Spring PR diff
 ├── report/
@@ -151,14 +155,19 @@ Lenses and skills grow by real need, never speculatively. Planned next, in rough
 - **Lenses:** `event-driven`, `observability`, `security`.
 - **Review skills:** `architecture-review` consumes the architecture lenses (`ddd`, `saga`, `cqrs`,
   `cdc` today; `event-driven` as it lands).
-- **Construction skills:** `spec-author` and `report` (a data-engineering + data-analysis pipeline
+- **Construction skills:** `spec-author`, `report` (a data-engineering + data-analysis pipeline
   that validates the data, runs the analysis, and only then renders an HTML report whose conclusions
-  are sustained by evidence) today; `feature-build` (spec → Java/Spring code) and `app-bootstrap`
-  (scaffold a service or module) as they land — all reusing the lenses generatively.
+  are sustained by evidence), and `architecture-decision-records` (records *why* a hard-to-reverse,
+  cross-cutting decision was made — context, alternatives, consequences — immutable and superseded
+  rather than edited) today; `feature-build` (spec → Java/Spring code) and `app-bootstrap` (scaffold
+  a service or module) as they land — all reusing the lenses generatively.
 - **Meta/ops skills:** `claude-setup-audit` (audits & fixes the `.claude/` setup against the
-  `agent-skills` lens) and `retrospective` (turns a lesson or a repeated mistake into a durable config
-  change — hook / rule / CLAUDE.md / memory — so it does not recur) today; `skill-author` (scaffold a
-  new skill correctly) as it lands.
+  `agent-skills` lens), `retrospective` (turns a lesson or a repeated mistake into a durable config
+  change — hook / rule / CLAUDE.md / memory — so it does not recur), `effort-budget` (right-sizes
+  model/effort/window/fan-out under a token/cost budget), and `eval-harness` (measures
+  non-deterministic outputs — an LLM feature, agent, or classifier — against a versioned dataset and a
+  baseline, so a regression is caught before release) today; `skill-author` (scaffold a new skill
+  correctly) as it lands.
 
 A lens is added only when a real consumer needs it; a skill is added per type of work.
 

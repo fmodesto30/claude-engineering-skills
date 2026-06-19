@@ -43,7 +43,7 @@ The building blocks (see [README.md](README.md#architecture-model) for the full 
 
 ## Structure map
 
-Six skills across three tracks. Load a skill's lenses only when the change actually touches that area.
+Eight skills across three tracks. Load a skill's lenses only when the change actually touches that area.
 
 **Review** — judge code/design that already exists (*evaluative*):
 
@@ -58,6 +58,7 @@ Six skills across three tracks. Load a skill's lenses only when the change actua
 |---|---|---|
 | [`spec-author`](skills/spec-author/SKILL.md) | writing/refining a **spec** before building | the lenses above, read generatively, + `spec-rubric` + `templates/spec.md` |
 | [`report`](skills/report/SKILL.md) | turning data/docs into an **HTML report** (general-purpose, not JVM-only) | `data-engineering`, `data-analysis`, `reporting` + `analysis-rigor` + `templates/` |
+| [`architecture-decision-records`](skills/architecture-decision-records/SKILL.md) | recording **why** a hard-to-reverse, cross-cutting decision was made (boundary, datastore, consistency/auth model, integration contract) — context, alternatives, consequences; immutable, superseded not edited | `ddd`, `saga`, `cqrs`, `cdc`, `spring-production-readiness` (read generatively) |
 
 **Meta/ops:**
 
@@ -66,6 +67,7 @@ Six skills across three tracks. Load a skill's lenses only when the change actua
 | [`claude-setup-audit`](skills/claude-setup-audit/SKILL.md) | auditing/fixing a `.claude/` setup (skill not triggering, resource won't resolve, secret in config) | `agent-skills` |
 | [`retrospective`](skills/retrospective/SKILL.md) | after a task or a **repeated error** — "save this lesson", "don't repeat this", "configure so this can't happen again", "what did we learn" | `agent-skills` |
 | [`effort-budget`](skills/effort-budget/SKILL.md) | right-sizing model/effort/window/fan-out, or flagging an **over-provisioned session** under a token/cost budget ("do I need the top model for this?") | `model-and-effort-economy` |
+| [`eval-harness`](skills/eval-harness/SKILL.md) | measuring **non-deterministic outputs** (LLM feature, agent, classifier) — dataset + grader + baseline; "is the new model better?", "set up regression testing for the AI feature" | `testing`, `data-analysis`, `data-engineering`, `model-and-effort-economy` |
 
 **Lenses** (`lenses/`, shared knowledge loaded on demand): `design-patterns`, `clean-code`, `testing`,
 `spring-production-readiness`, `solid`, `ddd`, `saga`, `cqrs`, `cdc`, `data-engineering`,
