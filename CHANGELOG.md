@@ -10,6 +10,27 @@ that **a new patch is available**.
 > entries name — rather than re-reading the whole repo. See the *patch update path* in
 > [`CLAUDE.md`](CLAUDE.md#staying-current--patches).
 
+## [0.8.0] — 2026-06-19
+
+### Added
+- **`scripts/repo-integrity-check.sh`** — a deterministic structural-integrity gate (sibling of the
+  sanitization gate, same `--selftest` contract) catching the drift the sanitization gate cannot:
+  (A) **index sync** — every `skills/*/` and `lenses/*.md` is referenced in both `CLAUDE.md` and
+  `README.md`; (B) **SKILL.md frontmatter** — opens with YAML carrying a `name` (== its directory) and
+  a `description` (the auto-discovery trigger surface, which silently never fires if malformed);
+  (C) **dangling relative links** — every `./`/`../` Markdown link resolves (load-bearing for human
+  navigation *and* the learn-protocol packaging step); (D) **release consistency** — `VERSION` equals
+  the top `CHANGELOG.md` entry. Wired into CI (`.github/workflows/integrity.yml`) and runnable as a
+  pre-commit hook. This release's own index/link/version edits were validated by it.
+- **`templates/adr.md`** — the Architecture Decision Record output format as a real template (parity
+  with `templates/spec.md`); the `architecture-decision-records` skill now references it instead of
+  carrying the format only inline.
+
+### Fixed
+- **`docs/CORPORATE_ADOPTION.md`** — corrected a stale lens snapshot (listed 7; there are 17) and a
+  stale branching model (said gitflow `main`/`develop`; the repo is **main-only**), and noted the new
+  integrity gate.
+
 ## [0.7.1] — 2026-06-19
 
 ### Fixed

@@ -1,0 +1,32 @@
+name: Repo Integrity
+
+# Deterministic structural-integrity gate (scripts/repo-integrity-check.sh):
+# index sync (skills/lenses vs CLAUDE.md & README), SKILL.md frontmatter (the
+# auto-discovery trigger surface), dangling relative links (navigation + the
+# learn-protocol packaging step), and VERSION <-> CHANGELOG release consistency.
+# Sibling of the Sanitization Gate; together they are the repo's CI guardrails.
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "feat/**"
+
+permissions:
+  contents: read
+
+jobs:
+  repo-integrity:
+    name: Repo integrity check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detector self-test
+        # Fails the build if any detector stops firing — guards against the gate
+        # silently degrading into a no-op.
+        run: bash scripts/repo-integrity-check.sh --selftest
+
+      - name: Run repo integrity check
+        run: bash scripts/repo-integrity-check.sh

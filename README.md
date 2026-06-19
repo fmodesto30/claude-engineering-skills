@@ -82,6 +82,7 @@ templates/
 │   ├── theme-slate.css      #   light
 │   └── theme-dark.css       #   dark
 ├── THEMING.md               # the theme-variable contract + how to add a theme
+├── adr.md                   # architecture decision record format (architecture-decision-records skill)
 ├── analysis-spec.md         # intermediate analytical contract (the HTML derives from it)
 └── spec.md                  # prescriptive engineering-spec format
 skills/
@@ -108,9 +109,11 @@ skills/
 examples/
 └── reporting/               # behavioral-eval fixtures for report + EXPECTED.md
 scripts/
-└── sanitization-check.sh    # deterministic sanitization gate (CI + pre-commit hook)
+├── sanitization-check.sh    # deterministic sanitization gate (CI + pre-commit hook)
+└── repo-integrity-check.sh  # structural-integrity gate: index sync, frontmatter, links, release marker
 .github/workflows/
-└── sanitization.yml         # CI: sanitization gate + gitleaks
+├── sanitization.yml         # CI: sanitization gate + gitleaks
+└── integrity.yml            # CI: repo structural-integrity gate
 LICENSE                      # CC BY 4.0
 VERSION                      # current release (semver), machine-readable
 CHANGELOG.md                 # what changed per release — the "new patch" signal

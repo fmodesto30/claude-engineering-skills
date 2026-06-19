@@ -26,7 +26,7 @@ The building blocks (see [README.md](README.md#architecture-model) for the full 
 - **Lens** = reusable specialized knowledge (`lenses/<topic>.md`), loaded by a skill on demand.
 - **Rule** = a global rubric (`rules/<name>.md`) every skill obeys (e.g. the severity rubric).
 - **Template** = an output format (`templates/…`).
-- **Hook** = deterministic enforcement (`scripts/sanitization-check.sh`, run in CI and pre-commit).
+- **Hook** = deterministic enforcement (`scripts/sanitization-check.sh` + `scripts/repo-integrity-check.sh`, run in CI and pre-commit).
 
 ## Philosophy (the stance to absorb)
 

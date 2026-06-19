@@ -23,15 +23,17 @@ This file contains **no corporate content**. It is a generic process and guardra
 - **Architecture:** Skill = workflow/type of work (`skills/`) · Lens = reusable engineering
   knowledge (`lenses/`) · Rule = global rule/policy (`rules/`, e.g. the severity rubric) ·
   Reference = skill-local material (`skills/<name>/references/`) · Template = output format ·
-  Hook = deterministic enforcement (CI + `scripts/sanitization-check.sh`).
+  Hook = deterministic enforcement (CI + `scripts/sanitization-check.sh` & `scripts/repo-integrity-check.sh`).
 - **Two skill tracks, one shared lens set:** **review** skills consume the lenses *evaluatively* —
   `java-pr-review` (diff/PR) and `architecture-review` (system/design), both using
   `rules/severity-rubric.md`; the **construction** skill consumes the *same* lenses *generatively* —
   `spec-author` (`skills/spec-author/SKILL.md`) produces a prescriptive spec via `templates/spec.md`,
   graded by `rules/spec-rubric.md`.
-- **Lenses (growing):** `design-patterns`, `clean-code`, `testing`, `ddd`, `saga`, `cqrs`, `cdc`.
-- **Branching:** gitflow (`main` / `develop` / `feat/*`); checkpoint + explicit approval before
-  every commit and push.
+- **Lenses (17, growing):** `design-patterns`, `clean-code`, `testing`, `solid`, `spring-production-readiness`,
+  `ddd`, `saga`, `cqrs`, `cdc`, `event-driven`, `security`, `observability`, `data-engineering`,
+  `data-analysis`, `reporting`, `agent-skills`, `model-and-effort-economy`.
+- **Branching:** **main-only** (`main` + short-lived `feat/*`; no `develop`); checkpoint + explicit
+  approval before every commit and push.
 
 Treat the list above as illustrative; read the repo for the authoritative current set.
 

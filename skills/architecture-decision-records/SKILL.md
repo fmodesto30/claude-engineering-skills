@@ -102,7 +102,8 @@ Date:   <YYYY-MM-DD>
 - Negative / accepted cost: <what gets harder, what we give up, the risk we take on>
 ```
 
-Keep it to one screen. An ADR is a decision record, not a design doc — depth goes into the forces and
+The canonical form of this output is [`../../templates/adr.md`](../../templates/adr.md) — emit a record
+that matches it. Keep it to one screen. An ADR is a decision record, not a design doc — depth goes into the forces and
 the trade-off, never into prose. When **evaluating an existing ADR** (or a missing one) rather than
 writing one, emit severity-tagged findings per the rubric below.
 
